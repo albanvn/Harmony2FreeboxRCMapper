@@ -55,26 +55,16 @@ class SSDPManager {
 
         if (message.includes('M-SEARCH')) {
           if (message.includes('ssdp:all') || message.includes('upnp:rootdevice')) {
-            Logger.log(Logger.LogSeverity.info, `Received M-SEARCH from ${rinfo.address}:${rinfo.port}, responding...`);
-
             setTimeout(() => {
               const notifyMessage = SSDPMessages.getEcpDeviceNotifyMessage();
               const okMessage = SSDPMessages.getEcpDeviceOKMessage();
 
               udpClient.send(notifyMessage, SSDP_MULTICAST_PORT, SSDP_MULTICAST_ADDR, (err) => {
-                if (err) {
-                  Logger.log(Logger.LogSeverity.error, `Error sending NOTIFY: ${err.message}`);
-                } else {
-                  Logger.log(Logger.LogSeverity.info, `Sent NOTIFY to multicast`);
-                }
+                if (err) Logger.log(Logger.LogSeverity.error, `Error sending NOTIFY: ${err.message}`);
               });
 
               udpServer.send(okMessage, rinfo.port, rinfo.address, (err) => {
-                if (err) {
-                  Logger.log(Logger.LogSeverity.error, `Error sending OK: ${err.message}`);
-                } else {
-                  Logger.log(Logger.LogSeverity.info, `Sent OK response to ${rinfo.address}:${rinfo.port}`);
-                }
+                if (err) Logger.log(Logger.LogSeverity.error, `Error sending OK: ${err.message}`);
               });
             }, 100);
           }
