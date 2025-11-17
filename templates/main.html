@@ -1,0 +1,131 @@
+<!--
+  Harmony2FreeboxRCMapper - Main Page
+  
+  Copyright (c) 2025
+  Licensed under the MIT License
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Harmony2FreeboxRCMapper - Main</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/css/main.css" />
+  </head>
+  <body>
+    <div class="common-header">
+      <h1>
+        <span style="font-size: 24px">🔌</span>
+        Harmony2FreeboxRCMapper - Main
+      </h1>
+      <div class="common-header-nav">
+        <button id="toggleBtn" onclick="toggleExecution()" style="margin-right: 15px">
+          ⏸️ Disable
+        </button>
+        <a href="/" class="active">🏠 Main</a>
+        <a href="/edit">✏️ Edit</a>
+        <a href="/help">📚 Help</a>
+      </div>
+    </div>
+
+    <div class="page-content">
+      <div
+        style="
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          margin-bottom: 20px;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+          "
+        >
+          <h2 style="margin: 0; color: #333">📊 Application Logs</h2>
+          <div style="display: flex; gap: 10px; align-items: center">
+            <select id="logFilter" onchange="filterLogs()" style="padding: 8px 12px; border-radius: 4px; border: 1px solid #ddd; font-size: 14px; cursor: pointer">
+              <option value="all">All Logs</option>
+              <option value="info">Info</option>
+              <option value="warn">Warning</option>
+              <option value="error">Error</option>
+            </select>
+            <button onclick="copyLogs()">📋 Copy Logs</button>
+            <button onclick="clearLogs()">🗑️ Clear Logs</button>
+          </div>
+        </div>
+        <div class="logs-container" id="logsContainer"></div>
+      </div>
+
+      <div
+        style="
+          background: white;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        "
+      >
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+          "
+        >
+          <h2 style="margin: 0; color: #333">⚙️ Configuration (rules.json)</h2>
+          <div style="display: flex; gap: 10px">
+            <button onclick="copyConfig()">📋 Copy</button>
+            <button onclick="exportConfig()">📥 Export</button>
+            <button onclick="importConfig()">📤 Import</button>
+          </div>
+        </div>
+        <pre
+          id="configContent"
+          style="
+            background: #f5f5f5;
+            color: #333;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            line-height: 1.5;
+            font-size: 13px;
+            border: 1px solid #ddd;
+            margin: 0;
+          "
+        >
+Loading...</pre
+        >
+        <input
+          type="file"
+          id="importFile"
+          accept=".json"
+          style="display: none"
+          onchange="handleImport(event)"
+        />
+      </div>
+    </div>
+    <script src="/js/main.js"></script>
+  </body>
+</html>
