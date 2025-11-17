@@ -248,26 +248,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-### In Summary
-
-The MIT License allows you to:
-- ✅ Use the software commercially
-- ✅ Modify the software
-- ✅ Distribute the software
-- ✅ Use the software privately
-- ✅ Sublicense the software
-
-**Conditions:**
-- You must include the copyright notice and license in all copies or substantial portions of the software
-
-**Limitations:**
-- The software is provided "as is", without warranty of any kind
-- Authors cannot be held liable for any damages related to software use
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to open an issue or pull request.
-
 ## 📧 Support
 
 For any questions or issues, check the real-time logs on the web interface or review the server console.
