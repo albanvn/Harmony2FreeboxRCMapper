@@ -44,8 +44,8 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
    ```bash
    npm start
    ```
-   
-   Le serveur démarre sur `http://0.0.0.0:8060`
+
+   Le serveur démarre sur `http://0.0.0.0:8042`
 
    > **Note :** Si vous avez plusieurs interfaces réseau, vous pouvez spécifier l'adresse IP à utiliser :
    ```bash
@@ -61,7 +61,7 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
    - Connectez-vous à votre Hub
 
 2. **Ajouter un nouvel appareil**
-   - Appuyez sur **Menu** (☰) → **Configuration Harmony** → **Ajouter/Modifier les dispositifs et activités** 
+   - Appuyez sur **Menu** (☰) → **Configuration Harmony** → **Ajouter/Modifier les dispositifs et activités**
    - Sélectionnez **Dispositifs**
    - Appuyez sur **Ajouter un Dispositifs**
 
@@ -75,7 +75,7 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
    - Validez et terminez la configuration
 
 5. **Alternative : Ajout manuel**
-   
+
    Si la détection automatique ne fonctionne pas :
    - Choisissez **Ajouter un dispositif manuellement**
    - Fabricant : `Roku`
@@ -85,22 +85,22 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
 ### Étape 2 : Configurer les touches
 
 1. **Accéder à l'interface web**
-   
+
    Ouvrez votre navigateur et allez sur :
    ```
-   http://[IP_DU_SERVEUR]:8060/edit
+   http://[IP_DU_SERVEUR]:8042/edit
    ```
-   
-   Exemple : `http://192.168.1.100:8060/edit`
+
+   Exemple : `http://192.168.1.100:8042/edit`
 
 2. **Entrer le code de télécommande Freebox**
-   
+
    Dans le champ **"Freebox Remote Control Code"**, entrez le code à 8 chiffres obtenu depuis votre Freebox.
 
 3. **Mapper les touches Roku → Freebox**
-   
+
    Pour chaque bouton Roku (Back, Home, Play, etc.), sélectionnez la touche Freebox correspondante dans la liste déroulante :
-   
+
    | Bouton Roku      | Touche Freebox suggérée |
    |------------------|-------------------------|
    | Back             | back                    |
@@ -123,11 +123,11 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
    | VolumeUp         | vol_inc                 |
 
 4. **Tester les touches**
-   
+
    Cliquez sur le bouton **Test** à côté de chaque touche pour vérifier qu'elle fonctionne correctement avec votre Freebox.
 
 5. **Enregistrer la configuration**
-   
+
    Cliquez sur le bouton **Save** (vert) pour sauvegarder vos changements.
 
 ### Étape 3 : Utiliser avec Harmony
@@ -135,7 +135,7 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
 Une fois configuré :
 - Les boutons de votre télécommande Harmony enverront automatiquement les commandes à la Freebox
 - Vous pouvez activer/désactiver l'exécution des règles via l'interface web
-- Les logs sont visibles en temps réel sur la page principale : `http://[IP_DU_SERVEUR]:8060`
+- Les logs sont visibles en temps réel sur la page principale : `http://[IP_DU_SERVEUR]:8042`
 
 ## 🔧 Interface Web
 
@@ -143,7 +143,7 @@ Le serveur expose plusieurs pages web :
 
 ### Page principale - Logs en temps réel
 ```
-http://[IP_DU_SERVEUR]:8060/
+http://[IP_DU_SERVEUR]:8042/
 ```
 - Affiche les logs en temps réel
 - Permet d'activer/désactiver l'exécution des règles
@@ -152,7 +152,7 @@ http://[IP_DU_SERVEUR]:8060/
 
 ### Page d'édition - Configuration
 ```
-http://[IP_DU_SERVEUR]:8060/edit
+http://[IP_DU_SERVEUR]:8042/edit
 ```
 - Configuration du code de télécommande Freebox
 - Mapping des touches Roku → Freebox
@@ -181,7 +181,7 @@ Configuration par défaut, utilisée lors d'un reset.
 ## 🛠️ Dépannage
 
 ### Le serveur ne démarre pas
-- Vérifiez que le port 8060 n'est pas déjà utilisé
+- Vérifiez que le port 8042 n'est pas déjà utilisé
 - Vérifiez que Node.js est bien installé : `node --version`
 
 ### Harmony ne détecte pas l'appareil

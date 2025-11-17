@@ -44,8 +44,8 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
    ```bash
    npm start
    ```
-   
-   The server starts on `http://0.0.0.0:8060`
+
+   The server starts on `http://0.0.0.0:8042`
 
    > **Note:** If you have multiple network interfaces, you can specify the IP address to use:
    ```bash
@@ -75,7 +75,7 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
    - Validate and complete the setup
 
 5. **Alternative: Manual addition**
-   
+
    If automatic detection doesn't work:
    - Choose **Add device manually**
    - Manufacturer: `Roku`
@@ -85,22 +85,22 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
 ### Step 2: Configure Buttons
 
 1. **Access the web interface**
-   
+
    Open your browser and go to:
    ```
-   http://[SERVER_IP]:8060/edit
+   http://[SERVER_IP]:8042/edit
    ```
-   
-   Example: `http://192.168.1.100:8060/edit`
+
+   Example: `http://192.168.1.100:8042/edit`
 
 2. **Enter Freebox remote control code**
-   
+
    In the **"Freebox Remote Control Code"** field, enter the 8-digit code obtained from your Freebox.
 
 3. **Map Roku → Freebox buttons**
-   
+
    For each Roku button (Back, Home, Play, etc.), select the corresponding Freebox key from the dropdown:
-   
+
    | Roku Button      | Suggested Freebox Key |
    |------------------|----------------------|
    | Back             | back                 |
@@ -123,11 +123,11 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
    | VolumeUp         | vol_inc              |
 
 4. **Test buttons**
-   
+
    Click the **Test** button next to each key to verify it works correctly with your Freebox.
 
 5. **Save configuration**
-   
+
    Click the green **Save** button to save your changes.
 
 ### Step 3: Use with Harmony
@@ -135,7 +135,7 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
 Once configured:
 - Your Harmony remote buttons will automatically send commands to the Freebox
 - You can enable/disable rule execution via the web interface
-- Logs are visible in real-time on the main page: `http://[SERVER_IP]:8060`
+- Logs are visible in real-time on the main page: `http://[SERVER_IP]:8042`
 
 ## 🔧 Web Interface
 
@@ -143,7 +143,7 @@ The server exposes several web pages:
 
 ### Main Page - Real-time Logs
 ```
-http://[SERVER_IP]:8060/
+http://[SERVER_IP]:8042/
 ```
 - Displays real-time logs with filtering (All/Info/Warning/Error)
 - Copy logs to clipboard
@@ -153,7 +153,7 @@ http://[SERVER_IP]:8060/
 
 ### Edit Page - Configuration
 ```
-http://[SERVER_IP]:8060/edit
+http://[SERVER_IP]:8042/edit
 ```
 - Freebox remote control code configuration
 - Roku → Freebox button mapping
@@ -162,7 +162,7 @@ http://[SERVER_IP]:8060/edit
 
 ### Help Page - Documentation
 ```
-http://[SERVER_IP]:8060/help
+http://[SERVER_IP]:8042/help
 ```
 - Dynamic documentation generated from README.md
 - Setup instructions
@@ -190,7 +190,7 @@ Default configuration, used during reset.
 ## 🛠️ Troubleshooting
 
 ### Server doesn't start
-- Check that port 8060 is not already in use
+- Check that port 8042 is not already in use
 - Verify Node.js is installed: `node --version`
 
 ### Harmony doesn't detect device

@@ -1,19 +1,19 @@
 /**
  * Harmony2FreeboxRCMapper - Rule Manager
- * 
+ *
  * Copyright (c) 2025
  * Licensed under the MIT License
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -59,26 +59,43 @@ class RuleManager {
     const rulesPath = path.join(process.cwd(), 'rules.json');
 
     if (!fs.existsSync(rulesPath)) {
-      Logger.log(Logger.LogSeverity.warn, 'rules.json was not found, generating blank...');
+      const defaultRulesPath = path.join(__dirname, '..', 'rules_default.json');
 
-      const defaultJson = {
-        remoteControlId: '',
-        rules: [
-          {
-            Button: 'Home',
-            Key: '',
-          },
-        ],
-      };
+      if (fs.existsSync(defaultRulesPath)) {
+        Logger.log(Logger.LogSeverity.warn, 'rules.json not found, copying from rules_default.json');
 
-      try {
-        fs.writeFileSync(rulesPath, JSON.stringify(defaultJson, null, 2), 'utf8');
-        Logger.log(
-          Logger.LogSeverity.info,
-          'Generated new rules.json, please configure Harmony2FreeboxRCMapper rules and restart'
-        );
-      } catch (err) {
-        Logger.error(`Error creating rules.json: ${err.message}`);
+        try {
+          const defaultContent = fs.readFileSync(defaultRulesPath, 'utf8');
+          fs.writeFileSync(rulesPath, defaultContent, 'utf8');
+          Logger.log(
+            Logger.LogSeverity.info,
+            'Generated new rules.json from default configuration'
+          );
+        } catch (err) {
+          Logger.error(`Error copying rules_default.json: ${err.message}`);
+        }
+      } else {
+        Logger.log(Logger.LogSeverity.warn, 'rules.json and rules_default.json not found, generating blank...');
+
+        const defaultJson = {
+          remoteControlId: '',
+          rules: [
+            {
+              Button: 'Home',
+              Key: '',
+            },
+          ],
+        };
+
+        try {
+          fs.writeFileSync(rulesPath, JSON.stringify(defaultJson, null, 2), 'utf8');
+          Logger.log(
+            Logger.LogSeverity.info,
+            'Generated new blank rules.json, please configure Harmony2FreeboxRCMapper rules'
+          );
+        } catch (err) {
+          Logger.error(`Error creating rules.json: ${err.message}`);
+        }
       }
     }
 
@@ -92,6 +109,13 @@ class RuleManager {
 
       const remoteControlId = data.remoteControlId || '';
       const rulesData = data.rules || [];
+
+      if (!remoteControlId || remoteControlId.trim() === '') {
+        Logger.log(
+          Logger.LogSeverity.warn,
+          'Freebox remote control code is empty! Please configure it in the web interface at /edit'
+        );
+      }
 
       for (const ruleData of rulesData) {
         if (ruleData.Key) {

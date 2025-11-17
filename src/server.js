@@ -1,19 +1,19 @@
 /**
  * Harmony2FreeboxRCMapper - Server
- * 
+ *
  * Copyright (c) 2025
  * Licensed under the MIT License
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,8 +36,6 @@ const { generateHelpPage } = require('./markdownConverter');
 let userProvidedEndpoint = '';
 let isRuleExecutionEnabled = true;
 let ruleManager = new RuleManager();
-
-console.log('Harmony2FreeboxRCMapper started (press CTRL+C to terminate)');
 
 Logger.log(
   Logger.LogSeverity.info,
@@ -108,7 +106,7 @@ app.get('/api/rules', (req, res) => {
   const defaultRulesPath = path.join(__dirname, '..', 'rules_default.json');
 
   let fileToRead = rulesPath;
-  
+
   if (!fs.existsSync(rulesPath)) {
     if (fs.existsSync(defaultRulesPath)) {
       Logger.log(Logger.LogSeverity.warn, 'rules.json not found, using rules_default.json');
