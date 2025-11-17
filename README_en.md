@@ -145,6 +145,9 @@ The server exposes several web pages:
 ```
 http://[SERVER_IP]:8042/
 ```
+
+![Home page](./Main.png)
+
 - Displays real-time logs with filtering (All/Info/Warning/Error)
 - Copy logs to clipboard
 - Enable/disable rule execution
@@ -155,6 +158,9 @@ http://[SERVER_IP]:8042/
 ```
 http://[SERVER_IP]:8042/edit
 ```
+
+![Edit Page](./Edit.png)
+
 - Freebox remote control code configuration
 - Roku → Freebox button mapping
 - Individual button testing

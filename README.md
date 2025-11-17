@@ -145,15 +145,22 @@ Le serveur expose plusieurs pages web :
 ```
 http://[IP_DU_SERVEUR]:8042/
 ```
-- Affiche les logs en temps réel
+
+![Page principale](./Main.png)
+
+- Affiche les logs en temps réel avec filtrage (All/Info/Warning/Error)
+- Copier les logs dans le presse-papiers
 - Permet d'activer/désactiver l'exécution des règles
 - Bouton pour effacer les logs
-- Visualisation de la configuration actuelle
+- Visualisation de la configuration actuelle avec copie/export/import
 
 ### Page d'édition - Configuration
 ```
 http://[IP_DU_SERVEUR]:8042/edit
 ```
+
+![Page d'édition](./Edit.png)
+
 - Configuration du code de télécommande Freebox
 - Mapping des touches Roku → Freebox
 - Test individuel de chaque touche
