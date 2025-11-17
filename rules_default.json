@@ -1,0 +1,81 @@
+{
+  "remoteControlId": "",
+  "rules": [
+    {
+      "Button": "Back",
+      "Key": "back"
+    },
+    {
+      "Button": "ChannelDown",
+      "Key": "prgm_dec"
+    },
+    {
+      "Button": "ChannelUp",
+      "Key": "prgm_inc"
+    },
+    {
+      "Button": "Down",
+      "Key": "down"
+    },
+    {
+      "Button": "Fwd",
+      "Key": "fwd"
+    },
+    {
+      "Button": "Home",
+      "Key": "home"
+    },
+    {
+      "Button": "Info",
+      "Key": "yellow"
+    },
+    {
+      "Button": "Left",
+      "Key": "left"
+    },
+    {
+      "Button": "Play",
+      "Key": "play"
+    },
+    {
+      "Button": "Pause",
+      "Key": "pause"
+    },
+    {
+      "Button": "PowerOff",
+      "Key": "power"
+    },
+    {
+      "Button": "PowerOn",
+      "Key": "power"
+    },
+    {
+      "Button": "Rev",
+      "Key": "bwd"
+    },
+    {
+      "Button": "Right",
+      "Key": "right"
+    },
+    {
+      "Button": "Select",
+      "Key": "ok"
+    },
+    {
+      "Button": "Up",
+      "Key": "up"
+    },
+    {
+      "Button": "VolumeDown",
+      "Key": "vol_dec"
+    },
+    {
+      "Button": "VolumeMute",
+      "Key": "mute"
+    },
+    {
+      "Button": "VolumeUp",
+      "Key": "vol_inc"
+    }
+  ]
+}

@@ -1,0 +1,740 @@
+<!--
+  Harmony2FreeboxRCMapper - Edit Page
+  
+  Copyright (c) 2025
+  Licensed under the MIT License
+  
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+  
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+  
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Harmony2FreeboxRCMapper - Edit</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        padding: 0;
+        margin: 0;
+      }
+
+      .page-wrapper {
+        padding: 20px;
+      }
+
+      .common-header {
+        background: white;
+        padding: 15px 30px;
+        border-bottom: 2px solid #6200ea;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .common-header h1 {
+        margin: 0;
+        color: #6200ea;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .common-header-nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .common-header-nav button {
+        background: #6200ea;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .common-header-nav button:hover {
+        background: #4a00b8;
+      }
+
+      .common-header-nav button.success {
+        background: #388e3c;
+      }
+
+      .common-header-nav button.success:hover {
+        background: #2e7d32;
+      }
+
+      .common-header-nav a {
+        color: #6200ea;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        transition: background 0.3s;
+        font-size: 14px;
+      }
+
+      .common-header-nav a:hover {
+        background: #f0f0f0;
+      }
+
+      .common-header-nav a.active {
+        background: #e8eaf6;
+        font-weight: 500;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .header {
+        background: white;
+        padding: 20px 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 24px;
+      }
+
+      .header h1 {
+        color: #1976d2;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 20px;
+      }
+
+      .remote-control-section {
+        background: white;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 24px;
+      }
+
+      .remote-control-section h2 {
+        color: #333;
+        margin-bottom: 16px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        font-family: 'Roboto', sans-serif;
+        transition: border-color 0.3s;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: #1976d2;
+      }
+
+      .rules-section {
+        background: white;
+        padding: 24px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 24px;
+      }
+
+      .rules-section h2 {
+        color: #333;
+        margin-bottom: 16px;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+      }
+
+      th {
+        background: #1976d2;
+        color: white;
+        padding: 8px 12px;
+        text-align: left;
+        font-weight: 500;
+        font-size: 14px;
+      }
+
+      th:last-child {
+        width: 120px;
+        text-align: center;
+      }
+
+      td {
+        padding: 6px 12px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      tr:hover {
+        background: #f5f5f5;
+      }
+
+      td:first-child {
+        font-weight: 500;
+        color: #333;
+        width: 25%;
+      }
+
+      td:nth-child(2) {
+        width: 55%;
+      }
+
+      td:last-child {
+        width: 20%;
+      }
+
+      .btn-test {
+        padding: 6px 12px;
+        font-size: 12px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .btn-test:hover {
+        background: #f57c00;
+      }
+
+      .btn-test:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .test-result {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 4px;
+      }
+
+      .test-result.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .test-result.error {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      label {
+        font-size: 14px;
+        font-weight: 500;
+        color: #555;
+        display: none;
+      }
+
+      select.input-field {
+        cursor: pointer;
+      }
+
+      textarea.input-field {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+        font-family: 'Roboto', sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .btn-primary {
+        background: #1976d2;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #1565c0;
+      }
+
+      .btn-success {
+        background: #4caf50;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #45a049;
+      }
+
+      .btn-danger {
+        background: #f44336;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #da190b;
+      }
+
+      .btn-secondary {
+        background: #757575;
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: #616161;
+      }
+
+      .actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 24px;
+        flex-wrap: wrap;
+      }
+
+      .material-icons {
+        font-size: 20px;
+      }
+
+      .alert {
+        padding: 16px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        display: none;
+      }
+
+      .alert.show {
+        display: block;
+      }
+
+      .alert-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border-left: 4px solid #4caf50;
+      }
+
+      .alert-error {
+        background: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #f44336;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #999;
+      }
+
+      .empty-state .material-icons {
+        font-size: 64px;
+        margin-bottom: 16px;
+        opacity: 0.3;
+      }
+
+      @media (max-width: 768px) {
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .actions {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="common-header">
+      <h1>
+        <span style="font-size: 24px;">🔌</span>
+        Harmony2FreeboxRCMapper - Edit
+      </h1>
+      <div class="common-header-nav">
+        <button id="toggleBtn" onclick="toggleExecution()" style="margin-right: 15px;">⏸️ Disable</button>
+        <a href="/">🏠 Main</a>
+        <a href="/edit" class="active">✏️ Edit</a>
+        <a href="/help">📚 Help</a>
+      </div>
+    </div>
+
+    <div class="page-wrapper">
+      <div class="container">
+
+        <div class="remote-control-section">
+          <h2>
+            <span class="material-icons">settings_remote</span>
+            Freebox Remote Control Code
+          </h2>
+          <div class="form-group">
+            <label for="remoteControlId">Freebox remote control code</label>
+            <input
+              type="text"
+              id="remoteControlId"
+              class="input-field"
+              placeholder="Enter the Freebox remote control code"
+            />
+          </div>
+        </div>
+
+        <div class="rules-section">
+          <h2>
+            <span class="material-icons">list</span>
+            Roku to Freebox Remote Control Rules
+          </h2>
+          <div id="rulesContainer"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-success" onclick="saveRules()">
+            <span class="material-icons">save</span>
+            Save
+          </button>
+          <button class="btn btn-danger" onclick="resetRules()">
+            <span class="material-icons">restore</span>
+            Reset to Default
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let rules = [];
+      let remoteControlId = '';
+      let freeboxKeys = [];
+      let rokuButtons = [];
+
+      async function loadRules() {
+        try {
+          console.log('Loading rules from /api/rules...');
+          const response = await fetch('/api/rules');
+          const data = await response.json();
+
+          console.log('API Response:', data);
+
+          if (data.success) {
+            remoteControlId = data.remoteControlId || '';
+            document.getElementById('remoteControlId').value = remoteControlId;
+
+            const existingRules = {};
+            if (data.rules && data.rules.length > 0) {
+              data.rules.forEach(rule => {
+                existingRules[rule.Button] = rule.Key || '';
+              });
+            }
+
+            rules = rokuButtons.map(button => ({
+              Button: button,
+              Key: existingRules[button] || ''
+            }));
+
+            console.log('Loaded rules:', rules);
+            renderRules();
+          } else {
+            console.error('API returned error:', data.error);
+          }
+        } catch (err) {
+          console.error('Fetch error:', err);
+        }
+      }
+
+      async function loadFreeboxKeys() {
+        try {
+          const response = await fetch('/api/freebox-keys');
+          const data = await response.json();
+          if (data.success) {
+            freeboxKeys = data.keys;
+          }
+        } catch (err) {
+          console.error('Error loading Freebox keys:', err);
+        }
+      }
+
+      async function loadRokuButtons() {
+        try {
+          const response = await fetch('/api/roku-buttons');
+          const data = await response.json();
+          if (data.success) {
+            rokuButtons = data.buttons;
+          }
+        } catch (err) {
+          console.error('Error loading Roku buttons:', err);
+        }
+      }
+
+      function renderRules() {
+        console.log('Rendering rules, count:', rules.length);
+        const container = document.getElementById('rulesContainer');
+
+        const keyOptionsHtml = freeboxKeys.map(key => 
+          `<option value="${key.value}">${key.label}</option>`
+        ).join('');
+
+        container.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Roku Button</th>
+                <th>Freebox Key</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rules.map((rule, index) => `
+                <tr>
+                  <td>${rule.Button}</td>
+                  <td>
+                    <select
+                      class="input-field"
+                      onchange="updateRule(${index}, 'Key', this.value)"
+                      id="key-${index}"
+                    >
+                      ${keyOptionsHtml}
+                    </select>
+                  </td>
+                  <td style="text-align: center;">
+                    <button
+                      class="btn-test"
+                      onclick="testRule(${index})"
+                      id="testBtn-${index}"
+                    >
+                      <span class="material-icons" style="font-size: 16px;">play_arrow</span>
+                      Test
+                    </button>
+                    <span id="result-${index}" class="test-result"></span>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+
+        rules.forEach((rule, index) => {
+          const select = document.getElementById(`key-${index}`);
+          if (select) {
+            select.value = rule.Key || '';
+          }
+        });
+      }
+
+      function updateRule(index, field, value) {
+        if (rules[index]) {
+          rules[index][field] = value;
+        }
+      }
+
+      async function saveRules() {
+        try {
+          const remoteId = document.getElementById('remoteControlId').value;
+
+          const rulesToSave = rules.filter(rule => rule.Key && rule.Key.trim() !== '');
+
+          const response = await fetch('/api/rules', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              remoteControlId: remoteId,
+              rules: rulesToSave
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            console.log('Configuration saved successfully!');
+          } else {
+            console.error('Error saving:', data.error || 'Unable to save');
+          }
+        } catch (err) {
+          console.error('Error saving:', err.message);
+        }
+      }
+
+      async function resetRules() {
+        try {
+          const response = await fetch('/api/reset-rules', {
+            method: 'POST'
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            remoteControlId = data.remoteControlId || '';
+            document.getElementById('remoteControlId').value = remoteControlId;
+
+            const existingRules = {};
+            if (data.rules && data.rules.length > 0) {
+              data.rules.forEach(rule => {
+                existingRules[rule.Button] = rule.Key || '';
+              });
+            }
+
+            rules = rokuButtons.map(button => ({
+              Button: button,
+              Key: existingRules[button] || ''
+            }));
+
+            renderRules();
+            console.log('Configuration reset to default successfully!');
+          } else {
+            console.error('Error resetting:', data.error || 'Unable to reset');
+          }
+        } catch (err) {
+          console.error('Error resetting:', err.message);
+        }
+      }
+
+      async function testRule(index) {
+        const rule = rules[index];
+        const btn = document.getElementById(`testBtn-${index}`);
+        const result = document.getElementById(`result-${index}`);
+        const remoteId = document.getElementById('remoteControlId').value;
+
+        if (!rule.Key || rule.Key.trim() === '') {
+          result.textContent = 'No key defined';
+          result.className = 'test-result error';
+          setTimeout(() => result.textContent = '', 3000);
+          return;
+        }
+
+        btn.disabled = true;
+        result.textContent = 'Testing...';
+        result.className = 'test-result';
+
+        try {
+          const response = await fetch('/api/test-rule', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              remoteControlId: remoteId,
+              key: rule.Key
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            result.textContent = '✓ ' + data.message;
+            result.className = 'test-result success';
+          } else {
+            result.textContent = '✗ ' + data.error;
+            result.className = 'test-result error';
+          }
+        } catch (err) {
+          result.textContent = '✗ ' + err.message;
+          result.className = 'test-result error';
+        } finally {
+          btn.disabled = false;
+          setTimeout(() => result.textContent = '', 5000);
+        }
+      }
+
+      let enabled = true;
+
+      async function loadStatus() {
+        try {
+          const response = await fetch('/api/logs');
+          const data = await response.json();
+          enabled = data.enabled;
+          updateToggleButton();
+        } catch (err) {
+          console.error('Error loading status:', err);
+        }
+      }
+
+      function updateToggleButton() {
+        const btn = document.getElementById('toggleBtn');
+        if (enabled) {
+          btn.textContent = '⏸️ Disable';
+          btn.className = '';
+        } else {
+          btn.textContent = '▶️ Enable';
+          btn.className = 'success';
+        }
+      }
+
+      async function toggleExecution() {
+        try {
+          const response = await fetch('/api/toggle', { method: 'POST' });
+          const data = await response.json();
+          enabled = data.enabled;
+          updateToggleButton();
+        } catch (err) {
+          console.error('Error toggling execution: ' + err.message);
+        }
+      }
+
+      async function init() {
+        await loadFreeboxKeys();
+        await loadRokuButtons();
+        await loadRules();
+        await loadStatus();
+      }
+
+      init();
+    </script>
+  </body>
+</html>
+
