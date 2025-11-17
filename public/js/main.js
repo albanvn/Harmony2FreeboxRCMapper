@@ -1,19 +1,19 @@
 /**
  * Harmony2FreeboxRCMapper - Main JavaScript
- * 
+ *
  * Copyright (c) 2025
  * Licensed under the MIT License
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,7 +32,7 @@ async function loadLogs() {
     const response = await fetch('/api/logs');
     const data = await response.json();
     allLogs = data.logs;
-    
+
     renderLogs();
 
     enabled = data.enabled;
@@ -46,8 +46,8 @@ function renderLogs() {
   const container = document.getElementById('logsContainer');
   container.innerHTML = '';
 
-  const filteredLogs = currentFilter === 'all' 
-    ? allLogs 
+  const filteredLogs = currentFilter === 'all'
+    ? allLogs
     : allLogs.filter(log => log.severity.toLowerCase() === currentFilter.toLowerCase());
 
   filteredLogs.forEach((log) => {
@@ -79,15 +79,15 @@ function filterLogs() {
 }
 
 function copyLogs() {
-  const filteredLogs = currentFilter === 'all' 
-    ? allLogs 
+  const filteredLogs = currentFilter === 'all'
+    ? allLogs
     : allLogs.filter(log => log.severity.toLowerCase() === currentFilter.toLowerCase());
-  
+
   const logsText = filteredLogs.map(log => {
     const time = new Date(log.timestamp).toLocaleTimeString();
     return `${time} [${log.severity}] ${log.message}`;
   }).join('\n');
-  
+
   navigator.clipboard.writeText(logsText)
     .then(() => {
       console.log('Logs copied to clipboard!');

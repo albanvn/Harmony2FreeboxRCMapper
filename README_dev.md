@@ -71,8 +71,8 @@ Harmony2FreeboxRCMapper/
    ```bash
    npm start
    ```
-   
-   Server starts on `http://0.0.0.0:8060`
+
+   Server starts on `http://0.0.0.0:8042`
 
    > **Note:** If you have multiple network interfaces, you can specify the IP address to use:
    ```bash
@@ -191,7 +191,7 @@ Triggers a button press (Roku ECP protocol)
 
 **Example:**
 ```bash
-curl -X POST http://localhost:8060/keypress/Home
+curl -X POST http://localhost:8042/keypress/Home
 ```
 
 ### Get Logs
@@ -324,7 +324,7 @@ Default configuration template used for reset operations.
 ## 🛠️ Troubleshooting
 
 ### Server doesn't start
-- Check if port 8060 is already in use: `lsof -i :8060`
+- Check if port 8042 is already in use: `lsof -i :8042`
 - Verify Node.js installation: `node --version`
 
 ### Harmony doesn't detect device

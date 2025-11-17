@@ -1,19 +1,19 @@
 /**
  * Harmony2FreeboxRCMapper - SSDP Manager
- * 
+ *
  * Copyright (c) 2025
  * Licensed under the MIT License
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,7 +26,7 @@
 const dgram = require('dgram');
 const os = require('os');
 
-const { SSDP_NAME_DEFAULT, SSDP_MULTICAST_ADDR, SSDP_MULTICAST_PORT } = require('./constants');
+const { DEFAULT_PORT, SSDP_NAME_DEFAULT, SSDP_MULTICAST_ADDR, SSDP_MULTICAST_PORT } = require('./constants');
 const { Logger } = require('./logger');
 
 let userProvidedEndpoint = '';
@@ -56,7 +56,7 @@ class SSDPManager {
         if (message.includes('M-SEARCH')) {
           if (message.includes('ssdp:all') || message.includes('upnp:rootdevice')) {
             Logger.log(Logger.LogSeverity.info, `Received M-SEARCH from ${rinfo.address}:${rinfo.port}, responding...`);
-            
+
             setTimeout(() => {
               const notifyMessage = SSDPMessages.getEcpDeviceNotifyMessage();
               const okMessage = SSDPMessages.getEcpDeviceOKMessage();
@@ -137,7 +137,7 @@ class SSDPMessages {
       `Cache-Control: max-age=3600\r\n` +
       `NT: roku:ecp\r\n` +
       `NTS: ssdp:alive\r\n` +
-      `Location: http://${localIP}:8060/device-desc.xml\r\n` +
+      `Location: http://${localIP}:${DEFAULT_PORT}/device-desc.xml\r\n` +
       `USN: uuid:roku:ecp:${hostname}\r\n\r\n`;
 
     return Buffer.from(message, 'ascii');
@@ -153,7 +153,7 @@ class SSDPMessages {
       `USN: uuid:roku:ecp:${hostname}::roku:ecp\r\n` +
       `Cache-Control: max-age=3600\r\n` +
       `SERVER: Server: Roku/9.3.0 UPnP/1.0 Roku/9.3.0\r\n` +
-      `Location: http://${localIP}:8060/device-desc.xml\r\n\r\n`;
+      `Location: http://${localIP}:${DEFAULT_PORT}/device-desc.xml\r\n\r\n`;
 
     return Buffer.from(message, 'ascii');
   }
