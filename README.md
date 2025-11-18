@@ -1,6 +1,6 @@
 # Harmony2FreeboxRCMapper
 
-Un serveur Node.js qui permet de contrôler votre Freebox via une télécommande Logitech Harmony en émulant un appareil Roku.
+Un serveur Node.js qui permet de contrôler votre Freebox via **une télécommande Logitech Harmony et son Hub** en émulant un appareil Roku.
 
 ## 🙏 Remerciements
 
@@ -10,7 +10,7 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
 
 - Node.js (version 18 ou supérieure)
 - Une Freebox avec l'API de télécommande activée
-- Une télécommande Logitech Harmony Hub (ne fonctionne pas sur une télécommande Harmony seul)
+- Une télécommande Logitech Harmony Hub (**ne fonctionne pas sur une télécommande Harmony seul**)
 - Le code de télécommande de votre Freebox
 
 ## 🎯 Fonctionnalités
