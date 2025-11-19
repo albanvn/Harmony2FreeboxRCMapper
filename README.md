@@ -22,6 +22,12 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
 - ✅ Configuration par défaut réinitialisable
 - ✅ Test des touches en direct
 
+## ⚠️ Limitations
+
+- **Touches limitées** : Le nombre de touches disponibles est limité par celles présentes sur une télécommande Roku standard. Notamment, les **touches numériques (0-9)** ne sont pas disponibles car elles n'existent pas sur la télécommande du Roku. Si vous avez besoin d'accéder à des chaînes spécifiques directement, vous devrez utiliser les touches `prgm_inc` et `prgm_dec` pour naviguer entre les chaînes.
+
+  > **Note pour les versions futures** : Il serait possible dans une prochaine version de trouver un moyen d'ajouter ces touches numériques en émulant un appareil plus complet, comme un Windows Media Center par exemple, qui dispose d'une télécommande avec pavé numérique.
+
 ## 🚀 Installation
 
 1. **Cloner ou télécharger le projet**

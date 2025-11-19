@@ -48,6 +48,12 @@ Harmony2FreeboxRCMapper/
 - ✅ Default configuration reset
 - ✅ Individual button testing
 
+## ⚠️ Limitations
+
+- **Limited buttons**: The number of available buttons is limited by those present on a standard Roku remote control. Notably, **numeric keys (0-9)** are not available because they don't exist on the Roku remote. If you need to access specific channels directly, you'll need to use the `prgm_inc` and `prgm_dec` keys to navigate between channels.
+
+  > **Note for future versions**: It would be possible in a future version to find a way to add these numeric keys by emulating a more complete device, such as a Windows Media Center for example, which has a remote control with a numeric keypad.
+
 ## 🚀 Installation
 
 1. **Clone or download the project**
