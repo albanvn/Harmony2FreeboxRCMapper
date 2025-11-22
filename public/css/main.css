@@ -197,3 +197,24 @@ button.disabled:hover {
 .page-content {
   padding: 20px 30px;
 }
+
+.common-footer {
+  background: white;
+  padding: 15px 30px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  color: #666;
+  font-size: 13px;
+  margin-top: 40px;
+}
+
+.common-footer .version {
+  font-weight: 500;
+  color: #6200ea;
+}
+
+.common-footer .copyright {
+  margin-top: 5px;
+  font-size: 12px;
+  color: #999;
+}

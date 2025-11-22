@@ -318,6 +318,27 @@ function generateHelpPage(readmePath) {
                 font-size: 20px;
             }
         }
+
+        .common-footer {
+            background: white;
+            padding: 15px 30px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-top: 40px;
+        }
+
+        .common-footer .version {
+            font-weight: 500;
+            color: #6200ea;
+        }
+
+        .common-footer .copyright {
+            margin-top: 5px;
+            font-size: 12px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -337,6 +358,15 @@ function generateHelpPage(readmePath) {
     <div class="container">
         <div class="content">
             ${content}
+        </div>
+    </div>
+
+    <div class="common-footer">
+        <div>
+            Harmony2FreeboxRCMapper <span class="version" id="appVersion">v1.0.0</span>
+        </div>
+        <div class="copyright">
+            © 2025 - Licensed under MIT
         </div>
     </div>
 
@@ -365,7 +395,20 @@ function generateHelpPage(readmePath) {
             }
         }
 
+        async function loadVersion() {
+            try {
+                const response = await fetch('/api/version');
+                const data = await response.json();
+                if (data.success && data.version) {
+                    document.getElementById('appVersion').textContent = 'v' + data.version;
+                }
+            } catch (err) {
+                console.error('Error loading version:', err);
+            }
+        }
+
         loadStatus();
+        loadVersion();
     </script>
 </body>
 </html>`;
