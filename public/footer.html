@@ -1,0 +1,70 @@
+<!--
+  Harmony2FreeboxRCMapper - Footer Component
+
+  Copyright (c) 2025
+  Licensed under the MIT License
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+<style>
+  .common-footer {
+    background: white;
+    padding: 15px 30px;
+    border-top: 1px solid #e0e0e0;
+    text-align: center;
+    color: #666;
+    font-size: 13px;
+    margin-top: 40px;
+  }
+
+  .common-footer .version {
+    font-weight: 500;
+    color: #6200ea;
+  }
+
+  .common-footer .copyright {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #999;
+  }
+</style>
+
+<div class="common-footer">
+  <div>
+    Harmony2FreeboxRCMapper <span class="version" id="appVersion">v1.0.0</span>
+  </div>
+  <div class="copyright">
+    © 2025 - Licensed under MIT
+  </div>
+</div>
+
+<script>
+  // Charger la version depuis l'API
+  (async function loadVersion() {
+    try {
+      const response = await fetch('/api/version');
+      const data = await response.json();
+      if (data.success && data.version) {
+        document.getElementById('appVersion').textContent = 'v' + data.version;
+      }
+    } catch (err) {
+      console.error('Error loading version:', err);
+    }
+  })();
+</script>
