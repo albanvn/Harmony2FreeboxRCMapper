@@ -41,10 +41,12 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
    ```
 
 3. **Get your Freebox remote control code**
-   - Connect to your Freebox: https://mafreebox.freebox.fr
-   - Go to **Settings** → **Network Remote Control**
-   - Enable network remote control if not already active
-   - Note the **remote control code** (8 digits)
+   From the main menu of **Freebox Video** on your television:
+   - in the "Settings" section (far left in the main menu),
+   - then "System",
+   - then "Freebox Player and Server Information",
+   - go to the "Player" tab,
+   - on the right side of the screen there is a "Remote Control" section with a line "Network remote control code" showing the 8-digit code on the right. Note this code
 
 4. **Start the server**
    ```bash
