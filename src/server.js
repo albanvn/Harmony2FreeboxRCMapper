@@ -275,6 +275,17 @@ app.post('/api/test-rule', async (req, res) => {
   }
 });
 
+app.get('/api/version', (req, res) => {
+  try {
+    const packagePath = path.join(__dirname, '..', 'package.json');
+    const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    res.json({ success: true, version: packageJson.version });
+  } catch (err) {
+    Logger.error(`Error reading version: ${err.message}`);
+    res.json({ success: false, error: err.message });
+  }
+});
+
 const server = app.listen(port, host, () => {
   Logger.log(Logger.LogSeverity.info, `Button API running on http://${host}:${port}`);
 });

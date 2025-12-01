@@ -41,10 +41,12 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
    ```
 
 3. **Obtenir le code de télécommande Freebox**
-   - Connectez-vous à votre Freebox : https://mafreebox.freebox.fr
-   - Allez dans **Paramètres** → **Télécommande réseau**
-   - Activez la télécommande réseau si ce n'est pas déjà fait
-   - Notez le **code de télécommande** (8 chiffres)
+   Depuis le menu de base du **Freebox Player** sur votre télévision :
+   - dans la section "Réglages" (complètement à gauche dans le menu de base),
+   - puis "Système",
+   - puis "Information Freebox Player et Server",
+   - aller dans l'onglet "Player",
+   - dans la partie à droite de l'écran il y a une section "Télécommande" et il y a une ligne "Code télécommande réseau" avec le code à 8 chiffres sur la droite. Notez ce code.
 
 4. **Démarrer le serveur**
    ```bash

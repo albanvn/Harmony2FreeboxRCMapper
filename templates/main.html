@@ -126,6 +126,30 @@ Loading...</pre
         />
       </div>
     </div>
+
+    <div class="common-footer">
+      <div>
+        Harmony2FreeboxRCMapper <span class="version" id="appVersion">v1.0.0</span>
+      </div>
+      <div class="copyright">
+        © 2025 - Licensed under MIT
+      </div>
+    </div>
+
     <script src="/js/main.js"></script>
+    <script>
+      // Charger la version depuis l'API
+      (async function loadVersion() {
+        try {
+          const response = await fetch('/api/version');
+          const data = await response.json();
+          if (data.success && data.version) {
+            document.getElementById('appVersion').textContent = 'v' + data.version;
+          }
+        } catch (err) {
+          console.error('Error loading version:', err);
+        }
+      })();
+    </script>
   </body>
 </html>
