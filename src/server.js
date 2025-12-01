@@ -1,3 +1,6 @@
+// Pour calculer l'uptime du serveur
+const serverStartTime = Date.now();
+
 /**
  * Harmony2FreeboxRCMapper - Server
  *
@@ -136,6 +139,11 @@ app.get('/api/freebox-keys', (req, res) => {
 
 app.get('/api/roku-buttons', (req, res) => {
   res.json({ success: true, buttons: ROKU_BUTTONS });
+});
+
+app.get('/api/ping', (req, res) => {
+  const uptimeSeconds = Math.floor((Date.now() - serverStartTime) / 1000);
+  res.json({ success: true, message: 'pong', uptime: uptimeSeconds });
 });
 
 app.post('/api/rules', (req, res) => {
