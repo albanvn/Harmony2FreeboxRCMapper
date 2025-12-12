@@ -23,7 +23,13 @@
  * SOFTWARE.
  */
 
-const FBX_RC_URL = 'http://hd1.freebox.fr/pub/remote_control';
+
+// Par défaut, hd1.freebox.fr, mais on veut pouvoir changer (hd1, hd2, hd3...)
+const DEFAULT_FBX_HOST = 'hd1.freebox.fr';
+
+function getFreeboxRemoteUrl(host) {
+  return `http://${host}/pub/remote_control`;
+}
 
 const FREEBOX_KEYS = [
   { value: '', label: '-- Select a key --' },
@@ -92,7 +98,8 @@ const RuleAction = {
 };
 
 module.exports = {
-  FBX_RC_URL,
+  DEFAULT_FBX_HOST,
+  getFreeboxRemoteUrl,
   FREEBOX_KEYS,
   DEFAULT_HOST,
   DEFAULT_PORT,
