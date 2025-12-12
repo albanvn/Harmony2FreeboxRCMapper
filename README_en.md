@@ -101,9 +101,12 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
 
    Example: `http://192.168.1.100:8042/edit`
 
-2. **Enter Freebox remote control code**
+2. **Configure Freebox settings**
 
-   In the **"Freebox Remote Control Code"** field, enter the 8-digit code obtained from your Freebox.
+   - **Freebox Code**: Enter the 8-digit code obtained from your Freebox.
+   - **Freebox URL**: Enter your Freebox Player URL (default: `hd1.freebox.fr`)
+
+   > **Note:** If you have multiple Freebox Players, you can change the URL to use `hd2.freebox.fr`, `hd3.freebox.fr`, etc.
 
 3. **Map Roku → Freebox buttons**
 
@@ -133,6 +136,8 @@ This project is inspired by [EcpEmuServer](https://github.com/logantgt/EcpEmuSer
 4. **Test buttons**
 
    Click the **Test** button next to each key to verify it works correctly with your Freebox.
+
+   > **Important:** Save your settings (Freebox Code and Freebox URL) first before testing buttons.
 
 5. **Save configuration**
 

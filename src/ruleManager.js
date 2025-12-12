@@ -28,7 +28,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { Logger } = require('./logger');
-const { FBX_RC_URL, RuleAction } = require('./constants');
+const { getFreeboxRemoteUrl, DEFAULT_FBX_HOST, RuleAction } = require('./constants');
 
 class Rule {
   constructor() {
@@ -109,6 +109,7 @@ class RuleManager {
 
       const remoteControlId = data.remoteControlId || '';
       const rulesData = data.rules || [];
+      const freeboxHost = data.freeboxHost || DEFAULT_FBX_HOST;
 
       if (!remoteControlId || remoteControlId.trim() === '') {
         Logger.log(
@@ -123,7 +124,7 @@ class RuleManager {
           rule.Name = ruleData.Button || '';
           rule.Button = ruleData.Button || '';
           rule.Action = RuleAction.HttpGET;
-          rule.EndPoint = `${FBX_RC_URL}?code=${remoteControlId}&key=${ruleData.Key}`;
+          rule.EndPoint = `${getFreeboxRemoteUrl(freeboxHost)}?code=${remoteControlId}&key=${ruleData.Key}`;
           rule.ExData = '';
 
           this.rules.addRule(rule);

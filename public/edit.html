@@ -276,7 +276,6 @@
         font-size: 14px;
         font-weight: 500;
         color: #555;
-        display: none;
       }
 
       select.input-field {
@@ -464,16 +463,34 @@
         <div class="remote-control-section">
           <h2>
             <span class="material-icons">settings_remote</span>
-            Freebox Remote Control Code
+            Freebox Remote Control Settings
           </h2>
+          <div class="form-group" style="margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="remoteControlId" style="min-width: 110px;">Freebox Code</label>
+              <input
+                type="text"
+                id="remoteControlId"
+                class="input-field"
+                placeholder="Enter the Freebox remote control code"
+                style="flex: 1;"
+              />
+            </div>
+          </div>
           <div class="form-group">
-            <label for="remoteControlId">Freebox remote control code</label>
-            <input
-              type="text"
-              id="remoteControlId"
-              class="input-field"
-              placeholder="Enter the Freebox remote control code"
-            />
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <label for="freeboxHost" style="min-width: 110px;">Freebox URL</label>
+              <input
+                type="text"
+                id="freeboxHost"
+                class="input-field"
+                placeholder="hd1.freebox.fr"
+                style="flex: 1;"
+              />
+            </div>
+              <div style="margin-top: 8px; color: #1dae49; font-size: 13px;">
+                Note: Please save the settings before testing.
+              </div>
           </div>
         </div>
 
@@ -483,6 +500,9 @@
             Roku to Freebox Remote Control Rules
           </h2>
           <div id="rulesContainer"></div>
+          <div style="margin-top: 8px; color: #1dae49; font-size: 13px;">
+            Note: Please save the settings before testing.
+          </div>
         </div>
 
         <div class="actions">
@@ -503,6 +523,7 @@
       let remoteControlId = '';
       let freeboxKeys = [];
       let rokuButtons = [];
+      let freeboxHost = '';
 
       async function loadRules() {
         try {
@@ -515,6 +536,8 @@
           if (data.success) {
             remoteControlId = data.remoteControlId || '';
             document.getElementById('remoteControlId').value = remoteControlId;
+            freeboxHost = data.freeboxHost || 'hd1.freebox.fr';
+            document.getElementById('freeboxHost').value = freeboxHost;
 
             const existingRules = {};
             if (data.rules && data.rules.length > 0) {
@@ -626,18 +649,29 @@
       async function saveRules() {
         try {
           const remoteId = document.getElementById('remoteControlId').value;
+          const hostElement = document.getElementById('freeboxHost');
+          console.log('freeboxHost element:', hostElement);
+          console.log('freeboxHost value from element:', hostElement ? hostElement.value : 'element not found');
+          const host = hostElement ? hostElement.value || 'hd1.freebox.fr' : 'hd1.freebox.fr';
+
+          console.log('Saving with freeboxHost:', host);
 
           const rulesToSave = rules.filter(rule => rule.Key && rule.Key.trim() !== '');
+
+          const dataToSend = {
+            remoteControlId: remoteId,
+            freeboxHost: host,
+            rules: rulesToSave
+          };
+
+          console.log('Data to send:', dataToSend);
 
           const response = await fetch('/api/rules', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify({
-              remoteControlId: remoteId,
-              rules: rulesToSave
-            })
+            body: JSON.stringify(dataToSend)
           });
 
           const data = await response.json();
@@ -663,6 +697,8 @@
           if (data.success) {
             remoteControlId = data.remoteControlId || '';
             document.getElementById('remoteControlId').value = remoteControlId;
+            freeboxHost = data.freeboxHost || 'hd1.freebox.fr';
+            document.getElementById('freeboxHost').value = freeboxHost;
 
             const existingRules = {};
             if (data.rules && data.rules.length > 0) {
@@ -691,6 +727,7 @@
         const btn = document.getElementById(`testBtn-${index}`);
         const result = document.getElementById(`result-${index}`);
         const remoteId = document.getElementById('remoteControlId').value;
+        const host = document.getElementById('freeboxHost').value || 'hd1.freebox.fr';
 
         if (!rule.Key || rule.Key.trim() === '') {
           result.textContent = 'No key defined';
@@ -711,6 +748,7 @@
             },
             body: JSON.stringify({
               remoteControlId: remoteId,
+              freeboxHost: host,
               key: rule.Key
             })
           });

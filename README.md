@@ -101,9 +101,12 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
 
    Exemple : `http://192.168.1.100:8042/edit`
 
-2. **Entrer le code de télécommande Freebox**
+2. **Configurer les paramètres Freebox**
 
-   Dans le champ **"Freebox Remote Control Code"**, entrez le code à 8 chiffres obtenu depuis votre Freebox.
+   - **Freebox Code** : Entrez le code à 8 chiffres obtenu depuis votre Freebox.
+   - **Freebox URL** : Entrez l'URL de votre Freebox Player (par défaut : `hd1.freebox.fr`)
+
+   > **Note :** Si vous avez plusieurs Freebox Players, vous pouvez changer l'URL pour utiliser `hd2.freebox.fr`, `hd3.freebox.fr`, etc.
 
 3. **Mapper les touches Roku → Freebox**
 
@@ -133,6 +136,8 @@ Ce projet est inspiré de [EcpEmuServer](https://github.com/logantgt/EcpEmuServe
 4. **Tester les touches**
 
    Cliquez sur le bouton **Test** à côté de chaque touche pour vérifier qu'elle fonctionne correctement avec votre Freebox.
+
+   > **Important :** Sauvegardez d'abord vos paramètres (Freebox Code et Freebox URL) avant de tester les touches.
 
 5. **Enregistrer la configuration**
 

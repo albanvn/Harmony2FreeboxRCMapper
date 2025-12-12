@@ -125,8 +125,9 @@ app.get('/api/rules', (req, res) => {
 
     const rules = data.rules || [];
     const remoteControlId = data.remoteControlId || '';
+    const freeboxHost = data.freeboxHost || 'hd1.freebox.fr';
 
-    res.json({ success: true, rules, remoteControlId });
+    res.json({ success: true, rules, remoteControlId, freeboxHost });
   } catch (err) {
     Logger.error(`Error reading rules: ${err.message}`);
     res.json({ success: false, error: err.message });
@@ -149,12 +150,13 @@ app.get('/api/ping', (req, res) => {
 app.post('/api/rules', (req, res) => {
   Logger.log(Logger.LogSeverity.info, 'Client saving rules to /api/rules');
 
-  const { rules, remoteControlId } = req.body;
+  const { rules, remoteControlId, freeboxHost } = req.body;
   const rulesPath = path.join(__dirname, '..', 'rules.json');
 
   try {
     const jsonObj = {
       remoteControlId: remoteControlId || '',
+      freeboxHost: freeboxHost || 'hd1.freebox.fr',
       rules: rules || [],
     };
 
@@ -235,6 +237,11 @@ app.post('/api/reset-rules', (req, res) => {
     const defaultContent = fs.readFileSync(defaultRulesPath, 'utf8');
     const defaultData = JSON.parse(defaultContent);
 
+    // Ajout d'une valeur par défaut pour freeboxHost si absente
+    if (!defaultData.freeboxHost) {
+      defaultData.freeboxHost = 'hd1.freebox.fr';
+    }
+
     fs.writeFileSync(rulesPath, JSON.stringify(defaultData, null, 2), 'utf8');
 
     Logger.log(Logger.LogSeverity.success, 'Rules reset to default');
@@ -245,6 +252,7 @@ app.post('/api/reset-rules', (req, res) => {
       success: true,
       rules: defaultData.rules,
       remoteControlId: defaultData.remoteControlId,
+      freeboxHost: defaultData.freeboxHost,
     });
   } catch (err) {
     Logger.error(`Error resetting rules: ${err.message}`);
@@ -253,25 +261,56 @@ app.post('/api/reset-rules', (req, res) => {
 });
 
 app.post('/api/test-rule', async (req, res) => {
-  const { remoteControlId, key } = req.body;
+  const { remoteControlId, key, freeboxHost } = req.body;
 
   if (!key) {
     return res.json({ success: false, error: 'Key is required' });
   }
 
-  const url = `${FBX_RC_URL}?code=${remoteControlId || ''}&key=${key}`;
+  // Utiliser l'host fourni ou celui du fichier de config
+  let host = freeboxHost;
+  if (!host) {
+    // Charger depuis rules.json si non fourni
+    try {
+      const rulesPath = path.join(__dirname, '..', 'rules.json');
+      if (fs.existsSync(rulesPath)) {
+        const jsonContent = fs.readFileSync(rulesPath, 'utf8');
+        const data = JSON.parse(jsonContent);
+        host = data.freeboxHost || 'hd1.freebox.fr';
+      } else {
+        host = 'hd1.freebox.fr';
+      }
+    } catch {
+      host = 'hd1.freebox.fr';
+    }
+  }
+  const { getFreeboxRemoteUrl } = require('./constants');
+  const url = `${getFreeboxRemoteUrl(host)}?code=${remoteControlId || ''}&key=${key}`;
 
   try {
     Logger.log(Logger.LogSeverity.info, `Testing rule: ${url}`);
     const fetch = (await import('node-fetch')).default;
-    const response = await fetch(url, { method: 'GET' });
+
+    // Créer un timeout de 5 secondes
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+
+    const response = await fetch(url, {
+      method: 'GET',
+      signal: controller.signal
+    });
+
+    clearTimeout(timeout);
     const status = response.status;
 
     Logger.log(Logger.LogSeverity.success, `Test successful: ${status} from ${url}`);
     res.json({ success: true, status, message: `HTTP ${status}` });
   } catch (err) {
-    Logger.log(Logger.LogSeverity.error, `Test failed: ${err.message}`);
-    res.json({ success: false, error: err.message });
+    const errorMessage = err.name === 'AbortError'
+      ? 'Request timeout - Cannot reach Freebox'
+      : err.message;
+    Logger.log(Logger.LogSeverity.error, `Test failed: ${errorMessage}`);
+    res.json({ success: false, error: errorMessage });
   }
 });
 

@@ -1,5 +1,6 @@
 {
   "remoteControlId": "",
+  "freeboxHost": "hd1.freebox.fr",
   "rules": [
     {
       "Button": "Back",
