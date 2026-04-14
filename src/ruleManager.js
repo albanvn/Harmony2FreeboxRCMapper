@@ -51,50 +51,73 @@ class RuleList {
 }
 
 class RuleManager {
-  constructor() {
+  constructor(instanceId = null) {
     this.rules = new RuleList();
+    this.instanceId = instanceId;
 
-    Logger.log(Logger.LogSeverity.info, 'RuleManager running, loading rules...');
+    Logger.log(Logger.LogSeverity.info, `${instanceId ? `[${instanceId}] ` : ''}RuleManager running, loading rules...`);
 
+    // Utiliser toujours rules.json (fichier unique avec sections)
     const rulesPath = path.join(process.cwd(), 'rules.json');
 
     if (!fs.existsSync(rulesPath)) {
       const defaultRulesPath = path.join(__dirname, '..', 'rules_default.json');
 
       if (fs.existsSync(defaultRulesPath)) {
-        Logger.log(Logger.LogSeverity.warn, 'rules.json not found, copying from rules_default.json');
+        Logger.log(Logger.LogSeverity.warn, `${instanceId ? `[${instanceId}] ` : ''}rules.json not found, copying from rules_default.json`);
 
         try {
           const defaultContent = fs.readFileSync(defaultRulesPath, 'utf8');
-          fs.writeFileSync(rulesPath, defaultContent, 'utf8');
+          const defaultData = JSON.parse(defaultContent);
+          
+          // Créer la structure avec sections roku1 et roku2
+          const newStructure = {
+            remoteControlId: defaultData.remoteControlId || '',
+            freeboxHost: defaultData.freeboxHost || DEFAULT_FBX_HOST,
+            roku1: { rules: defaultData.rules || [] },
+            roku2: { rules: defaultData.rules || [] }
+          };
+          
+          fs.writeFileSync(rulesPath, JSON.stringify(newStructure, null, 2), 'utf8');
           Logger.log(
             Logger.LogSeverity.info,
-            'Generated new rules.json from default configuration'
+            `${instanceId ? `[${instanceId}] ` : ''}Generated new rules.json from default configuration`
           );
         } catch (err) {
-          Logger.error(`Error copying rules_default.json: ${err.message}`);
+          Logger.error(`${instanceId ? `[${instanceId}] ` : ''}Error copying rules_default.json: ${err.message}`);
         }
       } else {
-        Logger.log(Logger.LogSeverity.warn, 'rules.json and rules_default.json not found, generating blank...');
+        Logger.log(Logger.LogSeverity.warn, `${instanceId ? `[${instanceId}] ` : ''}rules.json and rules_default.json not found, generating blank...`);
 
         const defaultJson = {
           remoteControlId: '',
-          rules: [
-            {
-              Button: 'Home',
-              Key: '',
-            },
-          ],
+          freeboxHost: DEFAULT_FBX_HOST,
+          roku1: {
+            rules: [
+              {
+                Button: 'Home',
+                Key: '',
+              },
+            ],
+          },
+          roku2: {
+            rules: [
+              {
+                Button: 'Home',
+                Key: '',
+              },
+            ],
+          },
         };
 
         try {
           fs.writeFileSync(rulesPath, JSON.stringify(defaultJson, null, 2), 'utf8');
           Logger.log(
             Logger.LogSeverity.info,
-            'Generated new blank rules.json, please configure Harmony2FreeboxRCMapper rules'
+            `${instanceId ? `[${instanceId}] ` : ''}Generated new blank rules.json, please configure Harmony2FreeboxRCMapper rules`
           );
         } catch (err) {
-          Logger.error(`Error creating rules.json: ${err.message}`);
+          Logger.error(`${instanceId ? `[${instanceId}] ` : ''}Error creating rules.json: ${err.message}`);
         }
       }
     }
@@ -108,8 +131,16 @@ class RuleManager {
       const data = JSON.parse(jsonContent);
 
       const remoteControlId = data.remoteControlId || '';
-      const rulesData = data.rules || [];
       const freeboxHost = data.freeboxHost || DEFAULT_FBX_HOST;
+      
+      // Lire les règles depuis la section appropriée (roku1, roku2) ou depuis rules directement (ancien format)
+      let rulesData = [];
+      if (this.instanceId && data[this.instanceId] && data[this.instanceId].rules) {
+        rulesData = data[this.instanceId].rules;
+      } else if (data.rules) {
+        // Ancien format de compatibilité
+        rulesData = data.rules;
+      }
 
       if (!remoteControlId || remoteControlId.trim() === '') {
         Logger.log(

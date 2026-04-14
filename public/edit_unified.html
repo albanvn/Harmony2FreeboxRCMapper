@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Harmony2FreeboxRCMapper - Multi-Instance Editor</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f5f5f5;
+        padding: 0;
+        margin: 0;
+      }
+
+      .common-header {
+        background: white;
+        padding: 15px 30px;
+        border-bottom: 2px solid #6200ea;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .common-header h1 {
+        margin: 0;
+        color: #6200ea;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .common-header-nav {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .common-header-nav button {
+        background: #6200ea;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background 0.3s;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .common-header-nav button:hover {
+        background: #4a00b8;
+      }
+
+      .common-header-nav button.success {
+        background: #388e3c;
+      }
+
+      .common-header-nav button.success:hover {
+        background: #2e7d32;
+      }
+
+      .common-header-nav a {
+        color: #6200ea;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        transition: background 0.3s;
+        font-size: 14px;
+      }
+
+      .common-header-nav a:hover {
+        background: #f0f0f0;
+      }
+
+      .common-header-nav a.active {
+        background: #e8eaf6;
+        font-weight: 500;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        margin-bottom: 10px;
+      }
+
+      .nav {
+        background: white;
+        padding: 10px 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      .nav a {
+        color: #667eea;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        transition: background 0.3s;
+      }
+
+      .nav a:hover {
+        background: #f0f0f0;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 20px auto;
+        padding: 0 20px;
+      }
+
+      .config-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+      }
+
+      .config-section h2 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 15px;
+      }
+
+      .form-group {
+        flex: 1;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+        color: #555;
+        font-weight: 500;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+      }
+
+      .two-column-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      .instance-column {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+
+      .instance-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .instance-header h3 {
+        font-size: 1.3rem;
+        margin-bottom: 5px;
+      }
+
+      .status-indicator {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        font-weight: bold;
+        margin-top: 5px;
+      }
+
+      .status-indicator.running {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .status-indicator.stopped {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+      }
+
+      th {
+        background: #f8f9fa;
+        padding: 12px 8px;
+        text-align: left;
+        font-weight: 500;
+        border-bottom: 2px solid #dee2e6;
+        font-size: 13px;
+      }
+
+      td {
+        padding: 10px 8px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      tr:hover {
+        background: #f5f5f5;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+      }
+
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #218838;
+      }
+
+      .btn-test {
+        padding: 6px 12px;
+        font-size: 12px;
+        background: #ff9800;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .btn-test:hover {
+        background: #f57c00;
+      }
+
+      .btn-test:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .actions {
+        text-align: center;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-top: 20px;
+      }
+
+      .test-result {
+        display: inline-block;
+        margin-left: 8px;
+        font-size: 11px;
+        padding: 2px 6px;
+        border-radius: 3px;
+      }
+
+      .test-result.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+      }
+
+      .test-result.error {
+        background: #ffebee;
+        color: #c62828;
+      }
+
+      select.input-field {
+        cursor: pointer;
+        font-size: 12px;
+        padding: 6px;
+      }
+
+      @media (max-width: 1200px) {
+        .two-column-layout {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+</head>
+<body>
+    <div class="common-header">
+      <h1>
+        <span style="font-size: 24px">🔌</span>
+        Harmony2FreeboxRCMapper - Edit
+      </h1>
+      <div class="common-header-nav">
+        <button id="toggleBtn" onclick="toggleExecution()" style="margin-right: 15px" title="Active/Désactive l'exécution de TOUTES les règles (utile pour déboguer)">⏸️ Disable All</button>
+        <label style="display: flex; align-items: center; gap: 5px; margin-right: 10px; cursor: pointer;">
+          <input type="checkbox" id="roku1Checkbox" onchange="toggleInstance('roku1')">
+          <span style="font-size: 14px;">🎮 Roku1</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; margin-right: 15px; cursor: pointer;">
+          <input type="checkbox" id="roku2Checkbox" onchange="toggleInstance('roku2')">
+          <span style="font-size: 14px;">🎮 Roku2</span>
+        </label>
+        <a href="/">🏠 Main</a>
+        <a href="/edit" class="active">✏️ Edit</a>
+        <a href="/help">📚 Help</a>
+      </div>
+    </div>
+
+    <div class="container" style="padding: 20px;">
+        <div class="config-section">
+            <h2>⚙️ Configuration commune</h2>
+            <p style="color: #666; margin-bottom: 15px;">Ces paramètres s'appliquent aux deux instances.</p>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="remoteControlId">Code télécommande Freebox</label>
+                    <input type="text" id="remoteControlId" class="input-field" placeholder="Entrez le code de la télécommande Freebox" />
+                </div>
+                <div class="form-group">
+                    <label for="freeboxHost">Freebox Host</label>
+                    <input type="text" id="freeboxHost" class="input-field" placeholder="hd1.freebox.fr" />
+                </div>
+            </div>
+        </div>
+
+        <div id="two-columns" class="two-column-layout">
+            <!-- Les colonnes seront générées dynamiquement -->
+        </div>
+
+        <div class="actions">
+            <button class="btn btn-success" onclick="saveAllRules()">
+                <span class="material-icons">save</span>
+                Sauvegarder toutes les configurations
+            </button>
+        </div>
+    </div>
+
+    <script>
+      let allRules = {}; // {roku1: {rules: [], remoteControlId: '', freeboxHost: ''}, roku2: {...}}
+      let freeboxKeys = [];
+      let rokuButtons = [];
+      let instances = [];
+
+      async function loadData() {
+        try {
+          // Charger les instances
+          const instancesResponse = await fetch('/api/instances');
+          const instancesData = await instancesResponse.json();
+          if (instancesData.success) {
+            instances = instancesData.instances;
+          }
+
+          // Charger les clés Freebox
+          const keysResponse = await fetch('/api/freebox-keys');
+          const keysData = await keysResponse.json();
+          if (keysData.success) {
+            freeboxKeys = keysData.keys;
+          }
+
+          // Charger les boutons Roku
+          const buttonsResponse = await fetch('/api/roku-buttons');
+          const buttonsData = await buttonsResponse.json();
+          if (buttonsData.success) {
+            rokuButtons = buttonsData.buttons;
+          }
+
+          // Charger toutes les règles
+          const rulesResponse = await fetch('/api/rules/all');
+          const rulesData = await rulesResponse.json();
+          if (rulesData.success) {
+            allRules = rulesData.allRules;
+
+            // Compléter avec les boutons manquants
+            for (const instanceId in allRules) {
+              const existingButtons = new Set(allRules[instanceId].rules.map(r => r.Button));
+              const missingButtons = rokuButtons.filter(b => !existingButtons.has(b));
+              missingButtons.forEach(button => {
+                allRules[instanceId].rules.push({ Button: button, Key: '' });
+              });
+
+              // Trier les règles par bouton
+              allRules[instanceId].rules.sort((a, b) => {
+                const indexA = rokuButtons.indexOf(a.Button);
+                const indexB = rokuButtons.indexOf(b.Button);
+                return indexA - indexB;
+              });
+            }
+          }
+
+          // Mettre à jour les champs communs
+          const firstInstance = allRules[Object.keys(allRules)[0]];
+          if (firstInstance) {
+            document.getElementById('freeboxHost').value = firstInstance.freeboxHost || 'hd1.freebox.fr';
+            document.getElementById('remoteControlId').value = firstInstance.remoteControlId || '';
+          }
+
+          renderColumns();
+        } catch (err) {
+          console.error('Error loading data:', err);
+        }
+      }
+
+      function renderColumns() {
+        const container = document.getElementById('two-columns');
+
+        const keyOptionsHtml = freeboxKeys.map(key =>
+          `<option value="${key.value}">${key.label}</option>`
+        ).join('');
+
+        container.innerHTML = instances.map(instance => {
+          const instanceRules = allRules[instance.instanceId] || { rules: [], remoteControlId: '', freeboxHost: 'hd1.freebox.fr' };
+          const statusClass = instance.isRunning ? 'running' : 'stopped';
+          const statusText = instance.isRunning ? '✅ Actif' : '❌ Arrêté';
+
+          return `
+            <div class="instance-column">
+              <div class="instance-header">
+                <h3>${instance.deviceName}</h3>
+                <div>${instance.instanceId} - SSDP Port ${instance.ssdpPort}</div>
+                <div class="status-indicator ${statusClass}">${statusText}</div>
+              </div>
+
+              <div style="max-height: 600px; overflow-y: auto;">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="width: 35%;">Bouton Roku</th>
+                      <th style="width: 45%;">Touche Freebox</th>
+                      <th style="width: 20%;">Test</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${instanceRules.rules.map((rule, index) => `
+                      <tr>
+                        <td><strong>${rule.Button}</strong></td>
+                        <td>
+                          <select
+                            class="input-field"
+                            id="key-${instance.instanceId}-${index}"
+                            onchange="updateRule('${instance.instanceId}', ${index}, this.value)"
+                          >
+                            ${keyOptionsHtml}
+                          </select>
+                        </td>
+                        <td style="text-align: center;">
+                          <button
+                            class="btn-test"
+                            onclick="testRule('${instance.instanceId}', ${index})"
+                            id="testBtn-${instance.instanceId}-${index}"
+                          >
+                            Test
+                          </button>
+                          <div id="result-${instance.instanceId}-${index}" class="test-result"></div>
+                        </td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Définir les valeurs des selects
+        instances.forEach(instance => {
+          const instanceRules = allRules[instance.instanceId];
+          if (instanceRules) {
+            instanceRules.rules.forEach((rule, index) => {
+              const select = document.getElementById(`key-${instance.instanceId}-${index}`);
+              if (select) {
+                select.value = rule.Key || '';
+              }
+            });
+          }
+        });
+      }
+
+      function updateRule(instanceId, index, value) {
+        if (allRules[instanceId] && allRules[instanceId].rules[index]) {
+          allRules[instanceId].rules[index].Key = value;
+        }
+      }
+
+      async function toggleExecution() {
+        try {
+          const response = await fetch('/api/toggle', { method: 'POST' });
+          const data = await response.json();
+          const btn = document.getElementById('toggleBtn');
+          if (data.success) {
+            btn.textContent = data.enabled ? '⏸️ Disable All' : '▶️ Enable All';
+            btn.className = data.enabled ? '' : 'success';
+          }
+        } catch (err) {
+          console.error('Error toggling execution:', err);
+        }
+      }
+
+      async function toggleInstance(instanceId) {
+        try {
+          const checkbox = document.getElementById(instanceId + 'Checkbox');
+          const isEnabled = checkbox.checked;
+          
+          const response = await fetch(`/api/instances/${instanceId}/toggle`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled: isEnabled })
+          });
+          
+          const data = await response.json();
+          if (data.success) {
+            console.log(`${instanceId} ${isEnabled ? 'enabled' : 'disabled'}`);
+          } else {
+            console.error('Error toggling instance:', data.error);
+            checkbox.checked = !isEnabled;
+          }
+        } catch (err) {
+          console.error('Error toggling instance:', err.message);
+          const checkbox = document.getElementById(instanceId + 'Checkbox');
+          checkbox.checked = !checkbox.checked;
+        }
+      }
+
+      async function loadInstanceStatus() {
+        try {
+          // Default to unchecked until server state is loaded.
+          document.getElementById('roku1Checkbox').checked = false;
+          document.getElementById('roku2Checkbox').checked = false;
+
+          const response = await fetch('/api/instances');
+          const data = await response.json();
+          if (data.success) {
+            data.instances.forEach(instance => {
+              const checkbox = document.getElementById(instance.instanceId + 'Checkbox');
+              if (checkbox) {
+                checkbox.checked = typeof instance.isEnabled === 'boolean'
+                  ? instance.isEnabled
+                  : instance.isRunning !== false;
+              }
+            });
+          }
+        } catch (err) {
+          console.error('Error loading instance status:', err);
+        }
+      }
+
+      async function testRule(instanceId, index) {
+        const rule = allRules[instanceId].rules[index];
+        const remoteId = allRules[instanceId].remoteControlId;
+        const freeboxHost = document.getElementById('freeboxHost').value || 'hd1.freebox.fr';
+
+        const btn = document.getElementById(`testBtn-${instanceId}-${index}`);
+        const result = document.getElementById(`result-${instanceId}-${index}`);
+
+        btn.disabled = true;
+        btn.textContent = '...';
+        result.textContent = '';
+        result.className = 'test-result';
+
+        try {
+          const response = await fetch('/api/test-rule', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              instanceId: instanceId,
+              remoteControlId: remoteId,
+              key: rule.Key,
+              freeboxHost: freeboxHost
+            })
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            result.textContent = `✓ ${data.status}`;
+            result.className = 'test-result success';
+          } else {
+            result.textContent = `✗ ${data.error}`;
+            result.className = 'test-result error';
+          }
+        } catch (err) {
+          result.textContent = `✗ ${err.message}`;
+          result.className = 'test-result error';
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Test';
+        }
+      }
+
+      async function saveAllRules() {
+        const freeboxHost = document.getElementById('freeboxHost').value || 'hd1.freebox.fr';
+        const remoteControlId = document.getElementById('remoteControlId').value || '';
+        let successCount = 0;
+
+        for (const instanceId in allRules) {
+          try {
+            const instanceRules = allRules[instanceId];
+            const rulesToSave = instanceRules.rules.filter(r => r.Key && r.Key.trim() !== '');
+
+            const response = await fetch('/api/rules/save', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                instanceId: instanceId,
+                remoteControlId: remoteControlId,  // Utiliser le remoteControlId commun
+                freeboxHost: freeboxHost,
+                rules: rulesToSave
+              })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+              successCount++;
+            } else {
+              console.error(`Error saving ${instanceId}:`, data.error);
+            }
+          } catch (err) {
+            console.error(`Error saving ${instanceId}:`, err);
+          }
+        }
+
+        if (successCount === instances.length) {
+          alert('✅ Toutes les configurations ont été sauvegardées avec succès !');
+        } else {
+          alert(`⚠️ ${successCount}/${instances.length} configurations sauvegardées. Vérifiez les logs.`);
+        }
+      }
+
+      // Charger au démarrage
+      loadData();
+      loadInstanceStatus();
+    </script>
+
+    <div class="common-footer" style="background: white; padding: 15px 30px; border-top: 1px solid #e0e0e0; text-align: center; color: #666; font-size: 13px; margin-top: 40px;">
+      <div>
+        Harmony2FreeboxRCMapper <span class="version" style="font-weight: 500; color: #6200ea;" id="appVersion">v1.1.0</span>
+      </div>
+      <div style="margin-top: 5px; font-size: 12px; color: #999;">
+        © 2025 - Licensed under MIT
+      </div>
+    </div>
+
+    <script>
+      // Charger la version depuis l'API
+      (async function loadVersion() {
+        try {
+          const response = await fetch('/api/version');
+          const data = await response.json();
+          if (data.success && data.version) {
+            document.getElementById('appVersion').textContent = 'v' + data.version;
+          }
+        } catch (err) {
+          console.error('Error loading version:', err);
+        }
+      })();
+    </script>

@@ -32,68 +32,81 @@ const { Logger } = require('./logger');
 let userProvidedEndpoint = '';
 
 class SSDPManager {
+  constructor(instanceId, port, deviceName, userEndpoint = '') {
+    this.instanceId = instanceId || 'default';
+    this.port = port || DEFAULT_PORT;
+    this.deviceName = deviceName || SSDP_NAME_DEFAULT;
+    this.userEndpoint = userEndpoint;
+    this.ssdpMessages = new SSDPMessages(this);
+    this.udpServer = null;
+    this.udpClient = null;
+  }
+
   static setUserProvidedEndpoint(endpoint) {
     userProvidedEndpoint = endpoint;
   }
 
-  static startSSDP() {
+  startSSDP() {
     try {
-      const udpServer = dgram.createSocket({ type: 'udp4', reuseAddr: true });
-      const udpClient = dgram.createSocket({ type: 'udp4' });
+      this.udpServer = dgram.createSocket({ type: 'udp4', reuseAddr: true });
+      this.udpClient = dgram.createSocket({ type: 'udp4' });
 
-      udpServer.on('error', (err) => {
-        Logger.log(Logger.LogSeverity.error, `Server error: ${err.message}`);
-        udpServer.close();
+      this.udpServer.on('error', (err) => {
+        Logger.log(Logger.LogSeverity.error, `[${this.instanceId}] Server error: ${err.message}`);
+        this.udpServer.close();
       });
 
-      udpClient.on('error', (err) => {
-        Logger.log(Logger.LogSeverity.error, `Client error: ${err.message}`);
+      this.udpClient.on('error', (err) => {
+        Logger.log(Logger.LogSeverity.error, `[${this.instanceId}] Client error: ${err.message}`);
       });
 
-      udpServer.on('message', (msg, rinfo) => {
+      this.udpServer.on('message', (msg, rinfo) => {
         const message = msg.toString('ascii');
 
         if (message.includes('M-SEARCH')) {
           if (message.includes('ssdp:all') || message.includes('upnp:rootdevice')) {
             setTimeout(() => {
-              const notifyMessage = SSDPMessages.getEcpDeviceNotifyMessage();
-              const okMessage = SSDPMessages.getEcpDeviceOKMessage();
+              const notifyMessage = this.ssdpMessages.getEcpDeviceNotifyMessage();
+              const okMessage = this.ssdpMessages.getEcpDeviceOKMessage();
 
-              udpClient.send(notifyMessage, SSDP_MULTICAST_PORT, SSDP_MULTICAST_ADDR, (err) => {
-                if (err) Logger.log(Logger.LogSeverity.error, `Error sending NOTIFY: ${err.message}`);
+              this.udpClient.send(notifyMessage, SSDP_MULTICAST_PORT, SSDP_MULTICAST_ADDR, (err) => {
+                if (err) Logger.log(Logger.LogSeverity.error, `[${this.instanceId}] Error sending NOTIFY: ${err.message}`);
               });
 
-              udpServer.send(okMessage, rinfo.port, rinfo.address, (err) => {
-                if (err) Logger.log(Logger.LogSeverity.error, `Error sending OK: ${err.message}`);
+              this.udpServer.send(okMessage, rinfo.port, rinfo.address, (err) => {
+                if (err) Logger.log(Logger.LogSeverity.error, `[${this.instanceId}] Error sending OK: ${err.message}`);
               });
             }, 100);
           }
         }
       });
 
-      udpServer.on('listening', () => {
-        const address = udpServer.address();
+      this.udpServer.on('listening', () => {
+        const address = this.udpServer.address();
         Logger.log(
           Logger.LogSeverity.info,
-          `SSDP Server listening on ${address.address}:${address.port}`
+          `[${this.instanceId}] SSDP Server listening on ${address.address}:${address.port}`
         );
 
-        udpServer.addMembership(SSDP_MULTICAST_ADDR);
+        this.udpServer.addMembership(SSDP_MULTICAST_ADDR);
 
         Logger.log(
           Logger.LogSeverity.warn,
-          `SSDP Multicasting with address ${SSDPManager.getLocalIPAddress()} ` +
-            `(if this is not your preferred interface, provide an IPv4 address as first arg)`
+          `[${this.instanceId}] SSDP Multicasting with address ${this.getLocalIPAddress()} on port ${this.port} - Device: ${this.deviceName}`
         );
       });
 
-      udpServer.bind(SSDP_MULTICAST_PORT);
+      this.udpServer.bind(SSDP_MULTICAST_PORT);
     } catch (ex) {
-      Logger.log(Logger.LogSeverity.error, ex.message);
+      Logger.log(Logger.LogSeverity.error, `[${this.instanceId}] ${ex.message}`);
     }
   }
 
-  static getLocalIPAddress() {
+  getLocalIPAddress() {
+    if (this.userEndpoint !== '') {
+      return this.userEndpoint;
+    }
+
     if (userProvidedEndpoint !== '') {
       return userProvidedEndpoint;
     }
@@ -110,16 +123,40 @@ class SSDPManager {
 
     throw new Error('No network adapters with an IPv4 address available!');
   }
+
+  getDeviceRootResponse() {
+    return this.ssdpMessages.getEcpDeviceRootResponse();
+  }
+
+  stopSSDP() {
+    try {
+      if (this.udpServer) {
+        this.udpServer.close();
+        this.udpServer = null;
+        Logger.log(Logger.LogSeverity.info, `[${this.instanceId}] SSDP Server stopped`);
+      }
+      if (this.udpClient) {
+        this.udpClient.close();
+        this.udpClient = null;
+      }
+    } catch (ex) {
+      Logger.log(Logger.LogSeverity.error, `[${this.instanceId}] Error stopping SSDP: ${ex.message}`);
+    }
+  }
 }
 
 class SSDPMessages {
-  static getSSDPName() {
-    return SSDP_NAME_DEFAULT;
+  constructor(ssdpManager) {
+    this.ssdpManager = ssdpManager;
   }
 
-  static getEcpDeviceNotifyMessage() {
-    const localIP = SSDPManager.getLocalIPAddress();
-    const hostname = os.hostname();
+  getSSDPName() {
+    return this.ssdpManager.deviceName;
+  }
+
+  getEcpDeviceNotifyMessage() {
+    const localIP = this.ssdpManager.getLocalIPAddress();
+    const instanceId = this.ssdpManager.instanceId;
 
     const message =
       `NOTIFY * HTTP/1.1\r\n` +
@@ -127,30 +164,30 @@ class SSDPMessages {
       `Cache-Control: max-age=3600\r\n` +
       `NT: roku:ecp\r\n` +
       `NTS: ssdp:alive\r\n` +
-      `Location: http://${localIP}:${DEFAULT_PORT}/device-desc.xml\r\n` +
-      `USN: uuid:roku:ecp:${hostname}\r\n\r\n`;
+      `Location: http://${localIP}:${this.ssdpManager.port}/device-desc.xml\r\n` +
+      `USN: uuid:roku:ecp:${instanceId}\r\n\r\n`;
 
     return Buffer.from(message, 'ascii');
   }
 
-  static getEcpDeviceOKMessage() {
-    const localIP = SSDPManager.getLocalIPAddress();
-    const hostname = os.hostname();
+  getEcpDeviceOKMessage() {
+    const localIP = this.ssdpManager.getLocalIPAddress();
+    const instanceId = this.ssdpManager.instanceId;
 
     const message =
       `HTTP/1.1 200 OK\r\n` +
       `ST: roku:ecp\r\n` +
-      `USN: uuid:roku:ecp:${hostname}::roku:ecp\r\n` +
+      `USN: uuid:roku:ecp:${instanceId}::roku:ecp\r\n` +
       `Cache-Control: max-age=3600\r\n` +
       `SERVER: Server: Roku/9.3.0 UPnP/1.0 Roku/9.3.0\r\n` +
-      `Location: http://${localIP}:${DEFAULT_PORT}/device-desc.xml\r\n\r\n`;
+      `Location: http://${localIP}:${this.ssdpManager.port}/device-desc.xml\r\n\r\n`;
 
     return Buffer.from(message, 'ascii');
   }
 
-  static getEcpDeviceRootResponse() {
-    const hostname = os.hostname();
-    const deviceName = SSDPMessages.getSSDPName();
+  getEcpDeviceRootResponse() {
+    const instanceId = this.ssdpManager.instanceId;
+    const deviceName = this.getSSDPName();
 
     const info =
       `<root>` +
@@ -159,11 +196,11 @@ class SSDPMessages {
       `<manufacturer>TCL</manufacturer>` +
       `<manufacturerURL>http://www.github.com/albanvn75/VirtualFreeboxRC</manufacturerURL>` +
       `<modelName>7108X</modelName>` +
-      `<serialNumber>${hostname}</serialNumber>` +
-      `<UDN>uuid:${hostname}</UDN>` +
+      `<serialNumber>${instanceId}</serialNumber>` +
+      `<UDN>uuid:${instanceId}</UDN>` +
       `</device>` +
       `</root>`;
-    console.log('Generated SSDP Root Response XML', info);
+    Logger.log(Logger.LogSeverity.info, `[${instanceId}] Generated SSDP Root Response XML`);
     return info;
   }
 }

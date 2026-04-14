@@ -36,9 +36,17 @@
         Harmony2FreeboxRCMapper - Main
       </h1>
       <div class="common-header-nav">
-        <button id="toggleBtn" onclick="toggleExecution()" style="margin-right: 15px">
-          ⏸️ Disable
+        <button id="toggleBtn" onclick="toggleExecution()" style="margin-right: 15px" title="Active/Désactive l'exécution de TOUTES les règles (utile pour déboguer)">
+          ⏸️ Disable All
         </button>
+        <label style="display: flex; align-items: center; gap: 5px; margin-right: 10px; cursor: pointer;">
+          <input type="checkbox" id="roku1Checkbox" onchange="toggleInstance('roku1')">
+          <span style="font-size: 14px;">🎮 Roku1</span>
+        </label>
+        <label style="display: flex; align-items: center; gap: 5px; margin-right: 15px; cursor: pointer;">
+          <input type="checkbox" id="roku2Checkbox" onchange="toggleInstance('roku2')">
+          <span style="font-size: 14px;">🎮 Roku2</span>
+        </label>
         <a href="/" class="active">🏠 Main</a>
         <a href="/edit">✏️ Edit</a>
         <a href="/help">📚 Help</a>
@@ -46,6 +54,18 @@
     </div>
 
     <div class="page-content">
+      <div id="instance-info" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="margin: 0 0 5px 0; font-size: 1.2rem;">🎮 Instance: <span id="current-instance-name"></span></h3>
+            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">Port: <span id="current-instance-port"></span></p>
+          </div>
+          <a href="/manage" style="background: white; color: #667eea; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+            Gérer les instances
+          </a>
+        </div>
+      </div>
+
       <div
         style="
           background: white;
@@ -138,6 +158,86 @@ Loading...</pre
 
     <script src="/js/main.js"></script>
     <script>
+      async function toggleExecution() {
+        const btn = document.getElementById('toggleBtn');
+        try {
+          const response = await fetch('/api/toggle', { method: 'POST' });
+          const data = await response.json();
+          if (data.success) {
+            btn.textContent = data.enabled ? '⏸️ Disable All' : '▶️ Enable All';
+          }
+        } catch (err) {
+          console.error('Error toggling execution:', err);
+        }
+      }
+
+      async function toggleInstance(instanceId) {
+        try {
+          const checkbox = document.getElementById(instanceId + 'Checkbox');
+          const isEnabled = checkbox.checked;
+          
+          const response = await fetch(`/api/instances/${instanceId}/toggle`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ enabled: isEnabled })
+          });
+          
+          const data = await response.json();
+          if (data.success) {
+            console.log(`${instanceId} ${isEnabled ? 'enabled' : 'disabled'}`);
+          } else {
+            console.error('Error toggling instance:', data.error);
+            checkbox.checked = !isEnabled;
+          }
+        } catch (err) {
+          console.error('Error toggling instance:', err.message);
+          const checkbox = document.getElementById(instanceId + 'Checkbox');
+          checkbox.checked = !checkbox.checked;
+        }
+      }
+
+      async function loadStatus() {
+        try {
+          // Default to unchecked until server state is loaded.
+          document.getElementById('roku1Checkbox').checked = false;
+          document.getElementById('roku2Checkbox').checked = false;
+
+          const response = await fetch('/api/instances');
+          const data = await response.json();
+          if (data.success) {
+            data.instances.forEach(instance => {
+              const checkbox = document.getElementById(instance.instanceId + 'Checkbox');
+              if (checkbox) {
+                checkbox.checked = typeof instance.isEnabled === 'boolean'
+                  ? instance.isEnabled
+                  : instance.isRunning !== false;
+              }
+            });
+          }
+        } catch (err) {
+          console.error('Error loading status:', err);
+        }
+      }
+
+      // Charger l'info de l'instance
+      (async function loadInstanceInfo() {
+        try {
+          const response = await fetch('/api/instances');
+          const data = await response.json();
+
+          if (data.success && data.currentInstanceId) {
+            const currentInstance = data.instances.find(i => i.instanceId === data.currentInstanceId);
+            if (currentInstance) {
+              document.getElementById('instance-info').style.display = 'block';
+              document.getElementById('current-instance-name').textContent = currentInstance.deviceName;
+              document.getElementById('current-instance-port').textContent = currentInstance.port;
+            }
+          }
+        } catch (err) {
+          console.error('Error loading instance info:', err);
+        }
+      })();
+
       // Charger la version depuis l'API
       (async function loadVersion() {
         try {
@@ -150,6 +250,9 @@ Loading...</pre
           console.error('Error loading version:', err);
         }
       })();
+
+      // Charger l'état initial
+      loadStatus();
     </script>
   </body>
 </html>

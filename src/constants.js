@@ -52,13 +52,25 @@ const FREEBOX_KEYS = [
   { value: 'bwd', label: 'Backward' },
   { value: 'rec', label: 'Record' },
   { value: 'list', label: 'List' },
+  { value: 'tv', label: 'TV' },
+  { value: 'media', label: 'Media' },
+  { value: 'free', label: 'Free' },
+  // Colored buttons
   { value: 'red', label: 'Red' },
   { value: 'green', label: 'Green' },
   { value: 'yellow', label: 'Yellow' },
   { value: 'blue', label: 'Blue' },
-  { value: 'tv', label: 'TV' },
-  { value: 'media', label: 'Media' },
-  { value: 'free', label: 'Free' }
+  // Numeric 0-9
+  { value: '1', label: '1' },
+  { value: '2', label: '2' },
+  { value: '3', label: '3' },
+  { value: '4', label: '4' },
+  { value: '5', label: '5' },
+  { value: '6', label: '6' },
+  { value: '7', label: '7' },
+  { value: '8', label: '8' },
+  { value: '9', label: '9' },
+  { value: '0', label: '0' },
 ];
 
 const DEFAULT_HOST = '0.0.0.0';
@@ -71,12 +83,16 @@ const SSDP_MULTICAST_PORT = 1900;
 
 const ROKU_BUTTONS = [
   'Back',
+  'BackSpace',
   'ChannelDown',
   'ChannelUp',
   'Down',
   'Fwd',
   'Home',
   'Info',
+  'InputTuner',
+  'InputUSB',
+  'InstantReplay',
   'Left',
   'Pause',
   'Play',

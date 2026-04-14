@@ -1,0 +1,17 @@
+{
+  "serverPort": 8042,
+  "instances": [
+    {
+      "instanceId": "roku1",
+      "ssdpPort": 8042,
+      "deviceName": "Freebox-RC1",
+      "enabled": true
+    },
+    {
+      "instanceId": "roku2",
+      "ssdpPort": 8043,
+      "deviceName": "Freebox-RC2",
+      "enabled": false
+    }
+  ]
+}

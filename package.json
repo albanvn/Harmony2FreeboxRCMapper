@@ -8,6 +8,7 @@
     "node-fetch": "^3.3.2"
   },
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "start:multi": "node src/server_multi_unified.js"
   }
 }

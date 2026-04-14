@@ -348,7 +348,15 @@ function generateHelpPage(readmePath) {
             Harmony2FreeboxRCMapper - Documentation
         </h1>
         <div class="common-header-nav">
-            <button id="toggleBtn" onclick="toggleExecution()">⏸️ Disable</button>
+            <button id="toggleBtn" onclick="toggleExecution()" style="margin-right: 15px" title="Active/Désactive l'exécution de TOUTES les règles (utile pour déboguer)">⏸️ Disable All</button>
+            <label style="display: flex; align-items: center; gap: 5px; margin-right: 10px; cursor: pointer;">
+              <input type="checkbox" id="roku1Checkbox" onchange="toggleInstance('roku1')">
+              <span style="font-size: 14px;">🎮 Roku1</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 5px; margin-right: 15px; cursor: pointer;">
+              <input type="checkbox" id="roku2Checkbox" onchange="toggleInstance('roku2')">
+              <span style="font-size: 14px;">🎮 Roku2</span>
+            </label>
             <a href="/">🏠 Main</a>
             <a href="/edit">✏️ Edit</a>
             <a href="/help" class="active">📚 Help</a>
@@ -377,19 +385,62 @@ function generateHelpPage(readmePath) {
                 const response = await fetch('/api/toggle-execution', { method: 'POST' });
                 const data = await response.json();
                 if (data.success) {
-                    btn.textContent = data.enabled ? '⏸️ Disable' : '▶️ Enable';
+                    btn.textContent = data.enabled ? '⏸️ Disable All' : '▶️ Enable All';
                 }
             } catch (err) {
                 console.error('Error toggling execution:', err);
             }
         }
 
+        async function toggleInstance(instanceId) {
+            try {
+                const checkbox = document.getElementById(instanceId + 'Checkbox');
+                const isEnabled = checkbox.checked;
+
+                const response = await fetch(\`/api/instances/\${instanceId}/toggle\`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ enabled: isEnabled })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    console.log(\`\${instanceId} \${isEnabled ? 'enabled' : 'disabled'}\`);
+                } else {
+                    console.error('Error toggling instance:', data.error);
+                    checkbox.checked = !isEnabled;
+                }
+            } catch (err) {
+                console.error('Error toggling instance:', err.message);
+                const checkbox = document.getElementById(instanceId + 'Checkbox');
+                checkbox.checked = !checkbox.checked;
+            }
+        }
+
         async function loadStatus() {
             try {
+                // Default to unchecked until server state is loaded.
+                document.getElementById('roku1Checkbox').checked = false;
+                document.getElementById('roku2Checkbox').checked = false;
+
                 const response = await fetch('/api/status');
                 const data = await response.json();
                 const btn = document.getElementById('toggleBtn');
-                btn.textContent = data.enabled ? '⏸️ Disable' : '▶️ Enable';
+                btn.textContent = data.enabled ? '⏸️ Disable All' : '▶️ Enable All';
+
+                // Charger l'état des instances
+                const instancesResponse = await fetch('/api/instances');
+                const instancesData = await instancesResponse.json();
+                if (instancesData.success) {
+                    instancesData.instances.forEach(instance => {
+                        const checkbox = document.getElementById(instance.instanceId + 'Checkbox');
+                        if (checkbox) {
+                            checkbox.checked = typeof instance.isEnabled === 'boolean'
+                                ? instance.isEnabled
+                                : instance.isRunning !== false;
+                        }
+                    });
+                }
             } catch (err) {
                 console.error('Error loading status:', err);
             }
