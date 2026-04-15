@@ -57,8 +57,10 @@ class RuleManager {
 
     Logger.log(Logger.LogSeverity.info, `${instanceId ? `[${instanceId}] ` : ''}RuleManager running, loading rules...`);
 
-    // Utiliser toujours rules.json (fichier unique avec sections)
-    const rulesPath = path.join(process.cwd(), 'rules.json');
+    // Prefer project root rules.json; process.cwd() can differ under PM2/systemd.
+    const projectRulesPath = path.join(__dirname, '..', 'rules.json');
+    const cwdRulesPath = path.join(process.cwd(), 'rules.json');
+    const rulesPath = fs.existsSync(projectRulesPath) ? projectRulesPath : cwdRulesPath;
 
     if (!fs.existsSync(rulesPath)) {
       const defaultRulesPath = path.join(__dirname, '..', 'rules_default.json');
@@ -122,6 +124,11 @@ class RuleManager {
       }
     }
 
+    Logger.log(
+      Logger.LogSeverity.info,
+      `${instanceId ? `[${instanceId}] ` : ''}Using rules file: ${rulesPath}`
+    );
+
     this.loadRules(rulesPath);
   }
 
@@ -165,6 +172,11 @@ class RuleManager {
           );
         }
       }
+
+      Logger.log(
+        Logger.LogSeverity.info,
+        `${this.instanceId ? `[${this.instanceId}] ` : ''}Loaded ${this.rules.ruleList.length} active rules`
+      );
     } catch (err) {
       Logger.error(`Error loading rules: ${err.message}`);
     }
@@ -172,8 +184,13 @@ class RuleManager {
 
   async execute(button) {
     try {
+      const normalizedButton = String(button || '').trim().toLowerCase();
+      let matchedRuleCount = 0;
+
       for (const rule of this.rules.ruleList) {
-        if (rule.Button === button) {
+        const normalizedRuleButton = String(rule.Button || '').trim().toLowerCase();
+        if (normalizedRuleButton === normalizedButton) {
+          matchedRuleCount += 1;
           let statusCode = 'Unused';
 
           switch (rule.Action) {
@@ -198,6 +215,13 @@ class RuleManager {
             );
           }
         }
+      }
+
+      if (matchedRuleCount === 0) {
+        Logger.log(
+          Logger.LogSeverity.warn,
+          `${this.instanceId ? `[${this.instanceId}] ` : ''}No rule matched button "${button}"`
+        );
       }
     } catch (ex) {
       Logger.error(ex.message);
