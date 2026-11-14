@@ -30,6 +30,10 @@ const fs = require('fs');
 const { Logger } = require('./logger');
 const { getFreeboxRemoteUrl, DEFAULT_FBX_HOST, RuleAction } = require('./constants');
 
+function normalizeButton(button) {
+  return String(button || '').trim().toLowerCase();
+}
+
 class Rule {
   constructor() {
     this.Name = '';
@@ -56,7 +60,8 @@ class RuleManager {
 
     Logger.log(Logger.LogSeverity.info, 'RuleManager running, loading rules...');
 
-    const rulesPath = path.join(process.cwd(), 'rules.json');
+    // Même emplacement que server.js (page /edit) : process.cwd() varie selon le lancement (PM2, systemd…).
+    const rulesPath = path.join(__dirname, '..', 'rules.json');
 
     if (!fs.existsSync(rulesPath)) {
       const defaultRulesPath = path.join(__dirname, '..', 'rules_default.json');
@@ -99,6 +104,7 @@ class RuleManager {
       }
     }
 
+    Logger.log(Logger.LogSeverity.info, `Using rules file: ${rulesPath}`);
     this.loadRules(rulesPath);
   }
 
@@ -134,6 +140,8 @@ class RuleManager {
           );
         }
       }
+
+      Logger.log(Logger.LogSeverity.info, `Loaded ${this.rules.ruleList.length} active rules`);
     } catch (err) {
       Logger.error(`Error loading rules: ${err.message}`);
     }
@@ -141,8 +149,13 @@ class RuleManager {
 
   async execute(button) {
     try {
+      // Comparaison tolérante (casse, espaces) entre le bouton Roku reçu et celui des règles.
+      const normalizedButton = normalizeButton(button);
+      let matchedRuleCount = 0;
+
       for (const rule of this.rules.ruleList) {
-        if (rule.Button === button) {
+        if (normalizeButton(rule.Button) === normalizedButton) {
+          matchedRuleCount += 1;
           let statusCode = 'Unused';
 
           switch (rule.Action) {
@@ -167,6 +180,10 @@ class RuleManager {
             );
           }
         }
+      }
+
+      if (matchedRuleCount === 0) {
+        Logger.log(Logger.LogSeverity.warn, `No rule matched button "${button}"`);
       }
     } catch (ex) {
       Logger.error(ex.message);
