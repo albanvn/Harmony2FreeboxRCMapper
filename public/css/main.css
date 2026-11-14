@@ -25,6 +25,15 @@ body {
   gap: 10px;
 }
 
+.app-version-badge {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6200ea;
+  background: #ede7f6;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
 .common-header-nav {
   display: flex;
   gap: 15px;

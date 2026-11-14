@@ -139,6 +139,15 @@ function generateHelpPage(readmePath) {
             gap: 10px;
         }
 
+        .app-version-badge {
+            font-size: 12px;
+            font-weight: 500;
+            color: #6200ea;
+            background: #ede7f6;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
         .common-header-nav {
             display: flex;
             gap: 15px;
@@ -347,6 +356,7 @@ function generateHelpPage(readmePath) {
         <h1>
             <span style="font-size: 24px;">📚</span>
             Harmony2FreeboxRCMapper - Documentation
+            <span class="app-version-badge" data-app-version hidden></span>
         </h1>
         <div class="common-header-nav">
             <button id="toggleBtn" onclick="toggleExecution()">⏸️ Disable</button>
@@ -364,7 +374,7 @@ function generateHelpPage(readmePath) {
 
     <div class="common-footer">
         <div>
-            Harmony2FreeboxRCMapper <span class="version" id="appVersion">v1.0.0</span>
+            Harmony2FreeboxRCMapper <span class="version" data-app-version></span>
         </div>
         <div class="copyright">
             © 2025 - Licensed under MIT
@@ -396,21 +406,9 @@ function generateHelpPage(readmePath) {
             }
         }
 
-        async function loadVersion() {
-            try {
-                const response = await fetch('/api/version');
-                const data = await response.json();
-                if (data.success && data.version) {
-                    document.getElementById('appVersion').textContent = 'v' + data.version;
-                }
-            } catch (err) {
-                console.error('Error loading version:', err);
-            }
-        }
-
         loadStatus();
-        loadVersion();
     </script>
+    <script src="/js/version.js"></script>
 </body>
 </html>`;
 }
