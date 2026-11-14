@@ -121,7 +121,20 @@ test('annule si le fichier lancé par le service n\'existe pas sur la révision 
 
   assert.strictEqual(result.status, 1);
   assert.match(result.stderr, /server_multi_unified\.js, absent de origin\/main/);
+  assert.match(result.stderr, /aucune branche distante ne le contient/);
   assert.strictEqual(git(serverDir, 'rev-parse', 'HEAD'), before);
+});
+
+test('indique les branches distantes qui contiennent le fichier lancé par le service', () => {
+  git(devDir, 'checkout', '--quiet', '-b', 'multi-roky');
+  commitFile(devDir, 'src/server_multi_unified.js', 'const m = 1;\n', 'multi');
+  git(devDir, 'push', '--quiet', '-u', 'origin', 'multi-roky');
+
+  const result = runUpdate('--entry', 'src/server_multi_unified.js');
+
+  assert.strictEqual(result.status, 1);
+  assert.match(result.stderr, /branche serveur : main/);
+  assert.match(result.stderr, /branches distantes qui le contiennent : multi-roky \(option --branch\)/);
 });
 
 test('signale une erreur de syntaxe et indique comment revenir en arrière', () => {
