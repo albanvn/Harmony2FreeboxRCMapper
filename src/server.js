@@ -34,7 +34,7 @@ const { Logger, logBuffer } = require('./logger');
 const { SSDPManager, SSDPMessages } = require('./ssdpManager');
 const { RuleManager } = require('./ruleManager');
 const { FBX_RC_URL, FREEBOX_KEYS, DEFAULT_HOST, DEFAULT_PORT, ROKU_BUTTONS } = require('./constants');
-const { generateHelpPage } = require('./markdownConverter');
+const { generateHelpPage, renderMarkdownFile } = require('./markdownConverter');
 
 let userProvidedEndpoint = '';
 let isRuleExecutionEnabled = true;
@@ -322,6 +322,16 @@ app.get('/api/version', (req, res) => {
   } catch (err) {
     Logger.error(`Error reading version: ${err.message}`);
     res.json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/changelog', (req, res) => {
+  try {
+    const changelogPath = path.join(__dirname, '..', 'CHANGELOG.md');
+    res.json({ success: true, html: renderMarkdownFile(changelogPath) });
+  } catch (err) {
+    Logger.error(`Error reading changelog: ${err.message}`);
+    res.status(500).json({ success: false, error: 'Changelog unavailable' });
   }
 });
 
