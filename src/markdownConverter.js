@@ -95,9 +95,13 @@ function markdownToHtml(markdown) {
   return html;
 }
 
+// Le HTML présent dans le Markdown n'est pas échappé : réservé aux fichiers du projet (README, CHANGELOG).
+function renderMarkdownFile(filePath) {
+  return markdownToHtml(fs.readFileSync(filePath, 'utf8'));
+}
+
 function generateHelpPage(readmePath) {
-  const markdown = fs.readFileSync(readmePath, 'utf8');
-  const content = markdownToHtml(markdown);
+  const content = renderMarkdownFile(readmePath);
 
   return `<!DOCTYPE html>
 <html lang="fr">
@@ -107,6 +111,7 @@ function generateHelpPage(readmePath) {
     <title>Harmony2FreeboxRCMapper - Documentation</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="/css/changelog.css" />
     <style>
         * {
             margin: 0;
@@ -413,4 +418,4 @@ function generateHelpPage(readmePath) {
 </html>`;
 }
 
-module.exports = { generateHelpPage, markdownToHtml };
+module.exports = { generateHelpPage, markdownToHtml, renderMarkdownFile };

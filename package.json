@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "test": "node --test scripts/jeedom-remote-update.test.js src/ruleManager.test.js",
+    "test": "node --test scripts/jeedom-remote-update.test.js src/ruleManager.test.js src/changelog.test.js",
     "deploy:jeedom": "./scripts/deploy-jeedom.sh"
   }
 }
