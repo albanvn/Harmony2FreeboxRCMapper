@@ -87,9 +87,24 @@ if [[ -z "$entry" && -n "$service" ]]; then
 fi
 entry=${entry#./}
 
-if [[ -n "$entry" ]]; then
-  git cat-file -e "$target_ref:$entry" 2>/dev/null \
-    || die "le service lance $entry, absent de $target_ref : mise à jour annulée (mauvaise branche ?)"
+# Liste les branches distantes (sans le préfixe origin/) dont la révision contient le fichier $1.
+remote_branches_with_file() {
+  local ref
+  while IFS= read -r ref; do
+    [[ "$ref" == "origin/HEAD" ]] && continue
+    git cat-file -e "$ref:$1" 2>/dev/null && echo "${ref#origin/}"
+  done < <(git for-each-ref --format='%(refname:short)' refs/remotes/origin)
+  return 0 # une absence de résultat n'est pas une erreur (set -e / pipefail)
+}
+
+if [[ -n "$entry" ]] && ! git cat-file -e "$target_ref:$entry" 2>/dev/null; then
+  candidates=$(remote_branches_with_file "$entry" | paste -sd ' ' -)
+  if [[ -n "$candidates" ]]; then
+    hint="branches distantes qui le contiennent : $candidates (option --branch)"
+  else
+    hint="aucune branche distante ne le contient : changez l'ExecStart du service ou poussez la branche"
+  fi
+  die "le service lance $entry, absent de $target_ref (branche serveur : $current_branch) : mise à jour annulée ; $hint"
 fi
 
 local_ref="refs/heads/$target_branch"
