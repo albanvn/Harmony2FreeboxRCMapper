@@ -34,6 +34,21 @@ function normalizeButton(button) {
   return String(button || '').trim().toLowerCase();
 }
 
+// Section lue en repli quand rules.json est au format multi-instance (branche multi-roky : roku1/roku2).
+const FALLBACK_RULES_SECTION = 'roku1';
+
+/**
+ * Extrait la liste des règles d'un contenu rules.json.
+ * Format historique : { rules: [...] } ; format multi-instance : { roku1: { rules: [...] }, ... }.
+ */
+function extractRules(data) {
+  if (Array.isArray(data?.rules)) {
+    return data.rules;
+  }
+  const fallbackRules = data?.[FALLBACK_RULES_SECTION]?.rules;
+  return Array.isArray(fallbackRules) ? fallbackRules : [];
+}
+
 class Rule {
   constructor() {
     this.Name = '';
@@ -114,7 +129,7 @@ class RuleManager {
       const data = JSON.parse(jsonContent);
 
       const remoteControlId = data.remoteControlId || '';
-      const rulesData = data.rules || [];
+      const rulesData = extractRules(data);
       const freeboxHost = data.freeboxHost || DEFAULT_FBX_HOST;
 
       if (!remoteControlId || remoteControlId.trim() === '') {
@@ -278,4 +293,4 @@ class RuleManager {
   }
 }
 
-module.exports = { RuleManager, Rule, RuleList, RuleAction };
+module.exports = { RuleManager, Rule, RuleList, RuleAction, extractRules };

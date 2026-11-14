@@ -32,7 +32,7 @@ const fs = require('fs');
 
 const { Logger, logBuffer } = require('./logger');
 const { SSDPManager, SSDPMessages } = require('./ssdpManager');
-const { RuleManager } = require('./ruleManager');
+const { RuleManager, extractRules } = require('./ruleManager');
 const { FBX_RC_URL, FREEBOX_KEYS, DEFAULT_HOST, DEFAULT_PORT, ROKU_BUTTONS } = require('./constants');
 const { generateHelpPage, renderMarkdownFile } = require('./markdownConverter');
 
@@ -123,7 +123,7 @@ app.get('/api/rules', (req, res) => {
     const jsonContent = fs.readFileSync(fileToRead, 'utf8');
     const data = JSON.parse(jsonContent);
 
-    const rules = data.rules || [];
+    const rules = extractRules(data);
     const remoteControlId = data.remoteControlId || '';
     const freeboxHost = data.freeboxHost || 'hd1.freebox.fr';
 
