@@ -297,6 +297,18 @@ Verify your remote control code:
 curl "http://hd1.freebox.fr/pub/remote_control?code=YOUR_CODE&key=home"
 ```
 
+### Deploying to the Jeedom server
+`scripts/deploy-jeedom.sh` updates the git checkout on the server over SSH (fast-forward only),
+runs `npm install` if dependencies changed, checks syntax, restarts the systemd service and
+checks that the web UI answers.
+```bash
+./scripts/deploy-jeedom.sh --dry-run        # show incoming commits only
+./scripts/deploy-jeedom.sh                  # update the branch already checked out on the server
+./scripts/deploy-jeedom.sh --branch main    # switch the server to another branch
+```
+Defaults can be overridden with `JEEDOM_HOST`, `JEEDOM_USER`, `JEEDOM_APP_DIR`,
+`JEEDOM_SERVICE` and `JEEDOM_APP_PORT`. Run `npm test` to test the remote update script.
+
 ## 🔑 Available Freebox Keys
 
 The Freebox API supports the following keys:

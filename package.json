@@ -8,6 +8,8 @@
     "node-fetch": "^3.3.2"
   },
   "scripts": {
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "test": "node --test scripts/jeedom-remote-update.test.js",
+    "deploy:jeedom": "./scripts/deploy-jeedom.sh"
   }
 }
