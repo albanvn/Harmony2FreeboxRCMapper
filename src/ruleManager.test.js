@@ -8,7 +8,7 @@ const fs = require('node:fs');
 const os = require('node:os');
 const path = require('node:path');
 
-const { RuleManager, Rule, RuleList, RuleAction } = require('./ruleManager');
+const { RuleManager, Rule, RuleList, RuleAction, extractRules } = require('./ruleManager');
 const { logBuffer } = require('./logger');
 
 function createManager(buttons) {
@@ -80,4 +80,38 @@ test('loadRules ignore les boutons sans touche et journalise le nombre de règle
   } finally {
     fs.rmSync(tmpDir, { recursive: true, force: true });
   }
+});
+
+test('loadRules lit la section roku1 quand rules est absent (format multi-instance)', () => {
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'rule-manager-'));
+  try {
+    const rulesPath = path.join(tmpDir, 'rules.json');
+    fs.writeFileSync(
+      rulesPath,
+      JSON.stringify({
+        remoteControlId: '12345678',
+        roku1: { rules: [{ Button: 'Home', Key: 'home' }] },
+        roku2: { rules: [{ Button: 'Back', Key: 'back' }] },
+      })
+    );
+    const manager = createManager([]);
+
+    manager.loadRules(rulesPath);
+
+    assert.deepStrictEqual(manager.rules.ruleList.map((r) => r.Button), ['Home']);
+  } finally {
+    fs.rmSync(tmpDir, { recursive: true, force: true });
+  }
+});
+
+test('extractRules privilégie rules à la racine sur la section roku1', () => {
+  const rules = [{ Button: 'Home', Key: 'home' }];
+
+  assert.strictEqual(extractRules({ rules, roku1: { rules: [{ Button: 'Back', Key: 'back' }] } }), rules);
+});
+
+test('extractRules renvoie une liste vide si aucune règle exploitable', () => {
+  assert.deepStrictEqual(extractRules({}), []);
+  assert.deepStrictEqual(extractRules(null), []);
+  assert.deepStrictEqual(extractRules({ rules: 'invalide', roku1: {} }), []);
 });
